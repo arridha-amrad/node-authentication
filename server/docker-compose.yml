@@ -1,0 +1,46 @@
+# prettier-ignore
+version: '3.8'
+
+services:
+   mongo:
+      image: mongo
+      restart: always
+      container_name: "mongodb-container"
+      ports: 
+         - 27017:27017
+      volumes: 
+         - mongodb_data_container:/data/db
+
+   mongo-express:
+      image: mongo-express
+      restart: always
+      container_name: "mongoExpress-container"
+      environment: 
+         ME_CONFIG_MONGODB_SERVER: "mongodb-container"
+      ports:
+         - 8081:8081
+   
+   redis:
+      image: redis
+      ports: 
+         - 127.0.0.1:6379:6379
+      command: redis-server --appendonly yes
+      volumes: 
+         - redis_data:/data
+      healthcheck:
+         test: redis-cli ping
+         interval: 3s
+         timeout: 5s
+         retries: 5
+   
+   redis-insight:
+      image: redislabs/redisinsight
+      ports: 
+         - 127.0.0.1:8001:8001
+      volumes:
+         - redisinsight_data:/db
+
+volumes: 
+   mongodb_data_container:
+   redis_data:
+   redisinsight_data:

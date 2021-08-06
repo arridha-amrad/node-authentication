@@ -1,0 +1,60 @@
+### Register ✅
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "arridhaamrad",
+  "email": "arridhaamrad@gmail.com",
+  "password": "123456"
+}
+
+### Email confirmation ✅
+PUT http://localhost:5000/api/auth/verify-email/H_jPqfhJm4prqE1y_D7iQpKt6WXG_Cdw2NzY4PKsrsF9wjhZJDWBxBADPg7lzaNjkFYiBOsHP6EiFUTnVjmLfhrYQQbngALnU5AqyPeBvAnTNaLUPZpOKswCOO8iex21ypBR2CaUB2ehXpn3eodd0KPaVa+wqckzoFl3NzoPObZfmijF3UF4+crGmSuANS1u_q82uCkutT0Rp0eg9NfOKLx7SAJVXH_oma3_8tEntwj6jBYyGZrxP8yS17ufhQ1KhEEIL0vbnRnbnl5Hd_Je_xxqWxaqn6x7RTPHZ7OOsJ84Y4WTIl9LE3qabgmHiUi3ARvCcpYO6XnbfbOCCK266QJpJhcaflp0wsQ0+eVGNesBOYcG6ydR1XaeriD8YdexHu6holtRspSKMqadnY4hsZ5QAA9XkoYxKYqgK_yRfqLCeu7q8amTpYH8ltPS6Km0pjjK4vm9uuF8xS1xCTDspIYGKypSruBZewZbSsWz44Lr0VyBaAiVnTusKV2KsaB8EYf8fP9jPi_dPGfCcGRXGQAppLgsW1OI_qPFDqvweBa9XhIOf2JA42kVrMjly+uDebCj1QfSPXPPUS7kS0m1vVIorUTTk_EMfABehC9HJC1ztbtKGKqC7sm2FHoNL07+wm9Pp7oJfbdioR6nhtJCtMGIiudtnmsAC3XPYgK2+N1VYqkvBn9xObIF8hMe3OsnTzlkWyqFq241NikRzxEqUK43BFizjWZO5jEm4AvfetHH2zK5WAEqusVcw9YJ63EAunMS8rNBoj7nXo1+4lxWfHdTwgE3ghKaVNoGGZZKkti_JT8VLjYUx6fFaavo29_iB2G19pKHXz9teINu_6v3JQYfKyIWhbrTck75hFZJkEX6LEmG97kANexsg1SiXNaLpaRTUrBsRya5yKERnonlIAhbmDFsozLFqqN0IovepvuceKXdKw1alWCePw21J6ypkYA2Jtz0oRWFUFMammHJ2XaRH12T8XCYJERiIsi_bcqusLMfJw6EiWF+XLg4bOhRZjOGc6hlSA98_jxN84gfMBCO_m86TNAlPP2wPriTNB29GVGdb2SdZjyaIAvU9sl4j0kvZIpLlqTL6jq9RqxzTsF5oTWxmDe7wIdS59nh3PxAKIW50itBlO7RazYu_9svUul6fk3NYqvTBwUTiJ0lSBYTR5uyNhnP5Xk4NJP80aA=
+
+
+### Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "identity": "arridhaamrad@gmail.com",
+  "password": "123456"
+}
+
+### Logout
+POST  http://localhost:5000/api/auth/logout
+
+
+### Refresh Token
+# fortuneCookie=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGVlZGI4NTk3MmE1YzFjM2Q2N2M2YTMiLCJpYXQiOjE2MjYyNjY4MzIsImV4cCI6MTY1NzgyNDQzMiwiaXNzIjoiYXV0aEJvaWxlclBsYXRlIn0.tTGb221DOvaDLaZlkX8Qdh-lbiVsL6hgqYcoxDX8UT4; Max-Age=31536000; Path=/; Expires=Thu, 14 Jul 2022 12:47:12 GMT; HttpOnly; SameSite=Lax
+GET http://localhost:5000/api/auth/refresh-token
+
+
+### Forgot Password
+POST http://localhost:5000/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "testuser1@123456.com"
+}
+
+
+### Reset Password
+POST http://localhost:5000/api/auth/reset-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3R1c2VyMUAxMjM0NTYuY29tIiwiaWF0IjoxNjI2Mjc1MjEyLCJleHAiOjE2MjY4ODAwMTIsImlzcyI6ImF1dGhCb2lsZXJQbGF0ZSJ9.BXpFoVEcl1ujfd_RagzULS2wzpOSGtT0FpA0Fm20eCc
+Content-Type: application/json
+
+{
+  "password": "654321"
+}
+
+
+### Me
+GET http://localhost:5000/api/user/me
+Cookie: QUOmgsaY4K1DBS%2BRWcF%2BOA7JETRwMSQ3fSJCrxJkIrtDlk%2FSqQpxbP6sPHBOmk2kpNJh7vyRRcLMDDiDUBwWuHZKQKLWO4WxXBoA4VUvaMWI2MMgkJb64CELZPRIKEfeTafAi3AOcOTOCRFHyOrouBr%2FeTFyrO6GhNNJEHpX%2BOg98xOHliGRsIqMI8mnqM06UbIetDtr5JL0SM%2BCFJ3tNusIV079jWbNdpW3dBKU0CK4lbwOcLhpar8VtQlT4%2B%2BUZMl%2F32Ohwk31WPkgNQWD8p%2B36EBkSBIKN9LG7epqpfW9VW9ZzOK3gioi4t2Tzaz2HkmPTjsIgAsSsMMV5Mwf2nZr3oWfcQCYVr%2Fe7RVF6YIBbA%2FJAH3aeKZMQIyz2FvGpFeRgf4gGmosUes89bYkt%2F5m8XIOG4jII%2BHZ0VBoRRNFCgJINAV7az0DBlgfYf%2B6OBbHM8LDvsHL3Py7BMIjy5xlzye8d8iQGfy%2FP9FUmsM3jufjwx8kPQKg0oV5QXQdCrg8BcfGB3UOqUNT238La9Tv0ynqHCbpz2e7wqLwNNkqSkAOGJgLDUvfHH%2F2wRal0t36J%2BKp4SDdpFYhL3ppLvYRUPZXn%2B0Qi7dz3Oqa9LCOSPqEy4EMPTXoloVXpApXSI0mPehrbHRpoRrPL%2B1OqNC%2FVk7t8ozQPkQinQGqn9khGXDW%2BWVyZzA8cLFGv72cGzSa8%2FdEixKql4qV6Z54xQfB%2BjpC1al0AZXO2HmO97twUYMSOJ67pXmWnYcKC%2BC%2BOXMgzJn9Elqk4sezSxEwKeUeARavclYEgY7KXY8uGjoxCw4jpxnHxhj56DJzuuhlfOELO7t%2FOCaam36B%2BIYzJSLH8RawDIHJsxYaqqpGmcnNtCoHINmGU6qdb%2FefIDLlv0CS1FO9Pi86qQpQqzr9S8jmAmwE%2FxGOz3DDw4DRmkZ0qPUgwqi0H5ZKHu06f7Psf6JvE2OR9TcEpcCNY4WLwLZwj%2Bhor%2BddebdmeXa3gyOxDsBXG3Ywcu45IyQiwnCiX27CHJ8kyio0pwveQvfTV1MveD0%2Fg4pk0jjMQxqxOfdl1oqmNW1a4o%2B6Qv%2BtGQ8KnDc7hPn6urUOoxDYIJTYBrqImc3DcBkxHPP0gR4SucFG8PIKO9kZYr%2F0yZTnYUcyDa3yLgYbNZPaecv4EjtfVBxMB2MmTxzn8eHzJg6oHEE%3D
+
+
+###
+POST http://localhost:5000/api/test/set
+
+###
+GET http://localhost:5000/api/test/get

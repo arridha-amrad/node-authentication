@@ -1,0 +1,12 @@
+- go to https://console.cloud.google.com
+- click a dropdown -> new project
+- fill project-name -> hit create btn
+- click ham-menu -> API & Services -> Credentials
+- click the dropdown -> choose your project
+- OAuth consent screen -> external -> create
+- fill application name
+- CreateCredential -> clientID
+- applicationType: Web application
+  -> authorised Javascript Origin : http://localhost:3000
+  -> authorised redirect URI's : http://localhost:3000
+- Voila!. You get clientID and clientSecret
