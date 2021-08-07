@@ -28,7 +28,7 @@ import * as redis from '../database/redisClient';
 import { decrypt, encrypt } from '../utils/encrypt';
 import { LoginRequest, LoginResponse, RegisterRequest } from '../dto/auth.dto';
 
-export const registerController = async (
+export const registerHandler = async (
    req: Request,
    res: Response,
    next: NextFunction,
@@ -77,7 +77,7 @@ export const registerController = async (
    }
 };
 
-export const verifyEmailController = async (
+export const emailVerificationHandler = async (
    req: Request,
    res: Response,
    next: NextFunction,
@@ -117,7 +117,7 @@ export const verifyEmailController = async (
    }
 };
 
-export const loginController = async (
+export const loginHandler = async (
    req: Request,
    res: Response,
    next: NextFunction,
@@ -160,6 +160,149 @@ export const loginController = async (
       }
    } catch (err) {
       console.log(err);
+      return next(new ServerErrorException());
+   }
+};
+
+export const logoutHandler = async (
+   req: Request,
+   res: Response,
+   next: NextFunction,
+): Promise<void> => {
+   try {
+      // verify the token first
+      const userId = req.userId;
+      console.log('userId : ', userId);
+
+      if (userId) {
+         // update user credential
+         await UserService.findUserByIdAndUpdate(userId, {
+            isLogin: false,
+         });
+         await redis.del(`${userId}_refToken`);
+         // delete user's cookie
+         res.clearCookie('LOGIN_CREDENTIALS');
+         res.send('logout successfully');
+      }
+   } catch (error) {
+      console.log(error);
+      return next(new ServerErrorException());
+   }
+};
+
+export const refreshTokenHandler = async (
+   req: Request,
+   res: Response,
+   next: NextFunction,
+): Promise<void> => {
+   try {
+      const userId = req.params.userId;
+      const encryptedRefreshToken = await redis.get(`${userId}_refToken`);
+      const bearerRefreshToken = decrypt(encryptedRefreshToken ?? '');
+      const token = bearerRefreshToken.split(' ')[1];
+      const payload = await JwtService.verifyRefreshToken(token);
+      const user = await UserService.findUserById(payload?.userId ?? '');
+      if (user) {
+         if (user.jwtVersion !== payload?.jwtVersion ?? '') {
+            return next(
+               new Exception(
+                  HTTP_CODE.METHOD_NOT_ALLOWED,
+                  'expired jwt version',
+               ),
+            );
+         }
+         const newAccessToken = await JwtService.signAccessToken(user);
+         const newRefreshToken = await JwtService.signRefreshToken(user);
+         // update cookie
+         if (newAccessToken && newRefreshToken) {
+            const newEncryptedAccessToken = encrypt(newAccessToken);
+            const newEncryptedRefreshToken = encrypt(newRefreshToken);
+            await redis.set(`${user.id}_refToken`, newEncryptedRefreshToken);
+            return responseWithCookieOnly(res, newEncryptedAccessToken);
+         }
+      }
+   } catch (err) {
+      console.log(err);
+      return next(new ServerErrorException());
+   }
+};
+
+export const forgotPasswordHandler = async (
+   req: Request,
+   res: Response,
+   next: NextFunction,
+): Promise<void> => {
+   const { email } = req.body;
+   const { errors, valid } = Validator.forgotPasswordValidator(email);
+   if (!valid) {
+      return next(new BadRequestException(errors));
+   }
+   try {
+      const user = await UserService.findUserByUsernameOrEmail(email);
+      if (!user) {
+         return next(new Exception(HTTP_CODE.NOT_FOUND, msg.userNotFound));
+      }
+      if (!user.isVerified) {
+         return next(new Exception(HTTP_CODE.FORBIDDEN, msg.emailNotVerified));
+      }
+      // update user credentials
+      const updated = await UserService.findUserByIdAndUpdate(user.id, {
+         isLogin: false,
+         requiredAuthAction: RequiredAuthAction.resetPassword,
+      });
+      if (updated) {
+         const token = await JwtService.createEmailLinkToken(email);
+         if (token) {
+            const encryptedToken = encrypt(token).replaceAll('/', '_');
+            await sendEmail(
+               email,
+               resetPasswordRequest(user.username, encryptedToken),
+            );
+            return responseSuccess(
+               res,
+               HTTP_CODE.OK,
+               msg.forgotPassword(email),
+            );
+         }
+      }
+   } catch (err) {
+      console.log('forgotPassword : ', err);
+      return next(new ServerErrorException());
+   }
+};
+
+export const resetPasswordHandler = async (
+   req: Request,
+   res: Response,
+   next: NextFunction,
+): Promise<void> => {
+   const { password } = req.body;
+   const { encryptedLinkToken } = req.params;
+   const { errors, valid } = Validator.resetPasswordValidator(password);
+   if (!valid) {
+      return next(new BadRequestException(errors));
+   }
+   try {
+      const token = decrypt(encryptedLinkToken.replaceAll('_', '/'));
+      const payload = await JwtService.verifyTokenLink(token);
+      const user = await UserService.findUserByUsernameOrEmail(payload.email);
+      if (user) {
+         if (user.requiredAuthAction !== RequiredAuthAction.resetPassword) {
+            return next(
+               new Exception(HTTP_CODE.FORBIDDEN, 'Action not granted'),
+            );
+         }
+         // update user's jwtVersion, password, requiredAuthAction
+         await UserService.findUserByIdAndUpdate(user.id, {
+            jwtVersion: v4(),
+            requiredAuthAction: RequiredAuthAction.null,
+            password: await argon2.hash(password),
+         });
+         // return
+         return responseSuccess(res, HTTP_CODE.OK, msg.resetPassword);
+      }
+   } catch (err) {
+      console.log('confirmEmail errors : ', err);
       return next(new ServerErrorException());
    }
 };
@@ -238,161 +381,3 @@ export const loginController = async (
 //       return serverError(res);
 //    }
 // };
-
-export const logoutController = async (
-   req: Request,
-   res: Response,
-   next: NextFunction,
-): Promise<void> => {
-   try {
-      // verify the token first
-      const userId = req.userId;
-      console.log('userId : ', userId);
-
-      if (userId) {
-         // update user credential
-         await UserService.findUserByIdAndUpdate(userId, {
-            isLogin: false,
-         });
-         await redis.del(`${userId}_refToken`);
-         // delete user's cookie
-         res.clearCookie('LOGIN_CREDENTIALS');
-         res.send('logout successfully');
-      }
-   } catch (error) {
-      console.log(error);
-      return next(new ServerErrorException());
-   }
-};
-
-export const handleRefreshToken = async (
-   req: Request,
-   res: Response,
-   next: NextFunction,
-): Promise<void> => {
-   const bearerRefreshToken = req.cookies.fortuneCookie;
-   console.log(bearerRefreshToken);
-   if (!bearerRefreshToken) {
-      return next(new Exception(HTTP_CODE.FORBIDDEN, 'You are not authorized'));
-   }
-   try {
-      const token = bearerRefreshToken.split(' ')[1];
-      const payload = await JwtService.verifyRefreshToken(token);
-
-      console.log('payload.userId : ', payload?.userId);
-
-      const user = await UserService.findUser(
-         { _id: payload?.userId },
-         { isIncludeJWTVersion: true },
-      );
-
-      if (user) {
-         console.log('user : ', user);
-
-         const jwtVersion = user?.jwtVersion;
-
-         console.log('jwt version', jwtVersion);
-         console.log('payload JWTVersion: ', payload);
-
-         if (jwtVersion !== payload?.jwtVersion ?? '') {
-            return next(
-               new Exception(
-                  HTTP_CODE.METHOD_NOT_ALLOWED,
-                  'expired jwt version',
-               ),
-            );
-         }
-         const newAccessToken = await JwtService.signAccessToken(user);
-         const newRefreshToken = await JwtService.signRefreshToken(user);
-         // update cookie
-         if (newAccessToken && newRefreshToken) {
-            responseWithCookieOnly(res, newAccessToken);
-         }
-      }
-   } catch (err) {
-      console.log(err);
-      return next(new ServerErrorException());
-   }
-};
-
-export const forgotPasswordController = async (
-   req: Request,
-   res: Response,
-   next: NextFunction,
-): Promise<void> => {
-   const { email } = req.body;
-   const { errors, valid } = Validator.forgotPasswordValidator(email);
-   if (!valid) {
-      return next(new BadRequestException(errors));
-   }
-   try {
-      const user = await UserService.findUserByUsernameOrEmail(email);
-      if (!user) {
-         return next(new Exception(HTTP_CODE.NOT_FOUND, msg.userNotFound));
-      }
-      if (!user.isVerified) {
-         return next(new Exception(HTTP_CODE.FORBIDDEN, msg.emailNotVerified));
-      }
-      // update user credentials
-      const updated = await UserService.findUserByIdAndUpdate(user.id, {
-         isLogin: false,
-         requiredAuthAction: RequiredAuthAction.resetPassword,
-      });
-      if (updated) {
-         const token = await JwtService.createEmailLinkToken(email);
-         if (token) {
-            const encryptedToken = encrypt(token);
-
-            //! DELETE SOON
-            console.log('email link token : ', token);
-
-            await sendEmail(
-               email,
-               resetPasswordRequest(user.username, encryptedToken),
-            );
-            return responseSuccess(res, HTTP_CODE.OK, {
-               message: msg.forgotPassword(email),
-            });
-         }
-      }
-   } catch (err) {
-      console.log('forgotPassword : ', err);
-      return next(new ServerErrorException());
-   }
-};
-
-export const resetPasswordController = async (
-   req: Request,
-   res: Response,
-   next: NextFunction,
-): Promise<void> => {
-   const { password } = req.body;
-   const { token } = req.params;
-   const { errors, valid } = Validator.resetPasswordValidator(password);
-   if (!valid) {
-      return next(new BadRequestException(errors));
-   }
-   try {
-      const payload = await JwtService.verifyTokenLink(token);
-      const user = await UserService.findUserByUsernameOrEmail(payload.email);
-      console.log('user : ', user);
-      if (user) {
-         if (user.requiredAuthAction !== RequiredAuthAction.resetPassword) {
-            return next(
-               new Exception(HTTP_CODE.FORBIDDEN, 'Action not granted'),
-            );
-         }
-         // update user's jwtVersion, password, requiredAuthAction
-         await UserService.findUserByIdAndUpdate(user.id, {
-            jwtVersion: v4(),
-            requiredAuthAction: RequiredAuthAction.null,
-            password: await argon2.hash(password),
-         });
-         // return
-         return responseSuccess(res, HTTP_CODE.OK, msg.resetPassword);
-      }
-   } catch (err) {
-      console.log('confirmEmail errors : ', err);
-      return next(new ServerErrorException());
-   }
-};
