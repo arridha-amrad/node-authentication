@@ -1,32 +1,32 @@
 import { NextFunction, Request, Response } from 'express';
-import { AuthenticationStrategy, RequiredAuthAction } from '../enums/user.enum';
+import { AuthenticationStrategy, RequiredAuthAction } from '../enums/UserEnum';
 import { v4 } from 'uuid';
 import argon2 from 'argon2';
-import sendEmail from '../services/mail.service';
+import sendEmail from '../services/MailService';
 import {
    emailConfirmation,
    resetPasswordRequest,
-} from '../templates/mail.templates';
-import * as JwtService from '../services/jwt.service';
-import * as msg from '../templates/notification.templates';
+} from '../templates/MailTemplates';
+import * as JwtService from '../services/JwtService';
+import * as msg from '../templates/NotificationTemplates';
 import {
    responseSuccess,
    responseWithCookie,
    responseWithCookieOnly,
-} from '../server.response';
+} from '../ServerResponse';
 import { HTTP_CODE } from '../enums/HTTP_CODE';
-import * as Validator from '../validators/auth.validator';
+import * as Validator from '../validators/AuthValidator';
 // import { OAuth2Client, TokenPayload } from 'google-auth-library';
 // import { IUser } from '../model/user/IUser';
-import * as UserService from '../services/user.service';
+import * as UserService from '../services/UserService';
 import { BadRequestException } from '../exceptions/BadRequestException';
 import Exception from '../exceptions/Exception';
 import ServerErrorException from '../exceptions/ServerErrorException';
 
-import * as redis from '../database/redisClient';
+import * as redis from '../database/RedisClient';
 
-import { decrypt, encrypt } from '../utils/encrypt';
-import { LoginRequest, LoginResponse, RegisterRequest } from '../dto/auth.dto';
+import { decrypt, encrypt } from '../utils/Encryptor';
+import { LoginRequest, LoginResponse, RegisterRequest } from '../dto/AuthData';
 
 export const registerHandler = async (
    req: Request,

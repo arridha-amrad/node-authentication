@@ -1,6 +1,6 @@
 import nodemailer, { SendMailOptions } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { IMailContent } from '../interfacesAndTypes/mail.interfaces';
+import { IMailContent } from '../interfacesAndTypes/MailInterfaces';
 
 const sendEmail = async (
    to: string,

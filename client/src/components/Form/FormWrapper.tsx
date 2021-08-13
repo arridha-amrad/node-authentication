@@ -10,7 +10,7 @@ import { VSpacer } from "../../elements/spacer.element";
 import { RootState } from "../../redux/store";
 import MyAlert from "../Alert";
 
-interface FormWrapperProps { }
+interface FormWrapperProps {}
 
 const FormWrapper: React.FC<FormWrapperProps> = ({ children }) => {
   const authState = useSelector((state: RootState) => state.auth);

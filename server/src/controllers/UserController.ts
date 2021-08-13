@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_CODE } from '../enums/HTTP_CODE';
-import { responseSuccess } from '../server.response';
+import { responseSuccess } from '../ServerResponse';
 import ServerErrorException from '../exceptions/ServerErrorException';
-import * as UserService from '../services/user.service';
-import { FetchedUserResponse } from '../dto/auth.dto';
+import * as UserService from '../services/UserService';
+import { FetchedUserResponse } from '../dto/AuthData';
 
 export const me = async (
    req: Request,

@@ -1,5 +1,5 @@
 import mongoose, { Model } from 'mongoose';
-import { IUserModel } from '../interfacesAndTypes/user.interfaces';
+import { IUserModel } from '../interfacesAndTypes/UserInterfaces';
 import argon2 from 'argon2';
 
 const UserSchema = new mongoose.Schema<

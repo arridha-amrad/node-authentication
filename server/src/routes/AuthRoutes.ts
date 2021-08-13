@@ -1,6 +1,6 @@
 import Express from 'express';
-import * as authController from '../controllers/auth.controllers';
-import { verifyAccessToken } from '../services/jwt.service';
+import * as authController from '../controllers/AuthController';
+import { verifyAccessToken } from '../services/JwtService';
 
 const router = Express.Router();
 

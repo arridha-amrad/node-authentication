@@ -1,8 +1,8 @@
+import { LoginRequest, RegisterRequest } from '../dto/AuthData';
 import {
    IFieldError,
    IValidationResult,
-} from '../interfacesAndTypes/authValidator.interfaces';
-import { ILoginDTO, IRegisterDTO } from '../interfacesAndTypes/user.interfaces';
+} from '../interfacesAndTypes/AuthValidatorInterfaces';
 
 export const resetPasswordValidator = (password: string): IValidationResult => {
    let errors: IFieldError[] = [];
@@ -41,7 +41,7 @@ export const forgotPasswordValidator = (email: string): IValidationResult => {
 export const loginValidator = ({
    identity,
    password,
-}: ILoginDTO): IValidationResult => {
+}: LoginRequest): IValidationResult => {
    let errors: IFieldError[] = [];
    if (identity.trim() === '') {
       errors = [
@@ -67,7 +67,7 @@ export const loginValidator = ({
    };
 };
 
-export const registerValidator = (data: IRegisterDTO): IValidationResult => {
+export const registerValidator = (data: RegisterRequest): IValidationResult => {
    const { email, password, username } = data;
    const regEx =
       /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;

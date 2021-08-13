@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { LoginResponse } from './dto/auth.dto';
+import { LoginResponse } from './dto/AuthData';
 import { HTTP_CODE } from './enums/HTTP_CODE';
 
 export const responseWithCookie = (
@@ -52,7 +52,6 @@ export const responseSuccess = <T>(
    data: T,
 ): void => {
    res.status(status).json({
-      errors: null,
       data,
    });
 };

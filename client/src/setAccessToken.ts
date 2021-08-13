@@ -1,4 +1,4 @@
-export let AccessToken = ""
+export let AccessToken = "";
 
 export const setAccessToken = (s: string) => {
   AccessToken = s;

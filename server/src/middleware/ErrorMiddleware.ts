@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ExceptionType } from '../interfacesAndTypes/exception.types';
+import { ExceptionType } from '../interfacesAndTypes/ExceptionTypes';
 
 export const errorMiddleware = (
    err: ExceptionType,

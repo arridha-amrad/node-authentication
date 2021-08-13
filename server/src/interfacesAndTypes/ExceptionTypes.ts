@@ -1,5 +1,5 @@
 import { HTTP_CODE } from '../enums/HTTP_CODE';
-import { IFieldError } from './authValidator.interfaces';
+import { IFieldError } from './AuthValidatorInterfaces';
 
 export interface IException {
    status: HTTP_CODE;

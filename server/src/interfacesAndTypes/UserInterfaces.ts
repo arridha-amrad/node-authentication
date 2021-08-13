@@ -1,4 +1,4 @@
-import { AuthenticationStrategy, RequiredAuthAction } from '../enums/user.enum';
+import { AuthenticationStrategy, RequiredAuthAction } from '../enums/UserEnum';
 
 export interface IUserModel {
    id: string;
@@ -18,14 +18,14 @@ export interface IUserModel {
    updatedAt: Date;
 }
 
-export interface IFindUserOptions {
-   isIncludePassword: boolean;
-   isIncludeJWTVersion: boolean;
-   isRequiredAuthAction: boolean;
-   isStrategy: boolean;
-}
+// export interface IFindUserOptions {
+//    isIncludePassword: boolean;
+//    isIncludeJWTVersion: boolean;
+//    isRequiredAuthAction: boolean;
+//    isStrategy: boolean;
+// }
 
-export interface IFilterOptions {
-   _id: string;
-   identity: string;
-}
+// export interface IFilterOptions {
+//    _id: string;
+//    identity: string;
+// }

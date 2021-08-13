@@ -4,12 +4,12 @@ import {
    AccessTokenPayloadType,
    LinkPayloadType,
    RefreshTokenPayloadType,
-} from '../interfacesAndTypes/jwt.types';
+} from '../interfacesAndTypes/JwtTypes';
 import { HTTP_CODE } from '../enums/HTTP_CODE';
 import Exception from '../exceptions/Exception';
 import * as fs from 'fs';
-import { IUserModel } from '../interfacesAndTypes/user.interfaces';
-import { decrypt } from '../utils/encrypt';
+import { IUserModel } from '../interfacesAndTypes/UserInterfaces';
+import { decrypt } from '../utils/Encryptor';
 
 const publicKey = fs.readFileSync('keys/public.pem', 'utf-8');
 const privateKey = fs.readFileSync('keys/private.pem', 'utf-8');
