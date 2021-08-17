@@ -20,18 +20,18 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ children }) => {
     <FormContainer>
       <Form>
         <FormTitle>authboilerplate</FormTitle>
-        {authMessage !== null && (
+        {typeof authMessage === "string" && (
           <MyAlert message={authMessage} type={"success"} />
         )}
-        {authErrors !== null && (
+        {typeof authErrors === "string" && (
           <MyAlert message={authErrors} type={"danger"} />
         )}
         <VSpacer />
         {children}
       </Form>
-      <FormFooter>
+      {/* <FormFooter>
         <p>&copy; Arridha Amrad</p>
-      </FormFooter>
+      </FormFooter> */}
     </FormContainer>
   );
 };

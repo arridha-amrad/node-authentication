@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import { Link, RouteComponentProps } from "react-router-dom";
 import FormWrapper from "../components/Form/FormWrapper";
 import MyTextField from "../components/Form/MyTextField";
+import { ResetPasswordData } from "../dto/AuthDTO";
 import { Button } from "../elements/button.element";
 import { FormLink } from "../elements/form.element";
 import { VSpacer } from "../elements/spacer.element";
-import { IResetPasswordState } from "../interfaces/auth.state.interfaces";
 import { resetPassword } from "../redux/actions/auth/auth.actions";
 import {
   CLEAR_AUTH_ERRORS,
@@ -14,7 +14,7 @@ import {
 } from "../redux/actions/auth/auth.types";
 import store, { RootState } from "../redux/store";
 import UseFormAuth from "../utils/UseFormAuth";
-import { ResetPasswordValidator } from "../validators/authValidator";
+import { ResetPasswordValidator } from "../validators/AuthValidator";
 
 interface ChildComponentProps extends RouteComponentProps<any> {}
 
@@ -24,19 +24,16 @@ export interface IResetPasswordField {
 
 const ResetPassword: React.FC<ChildComponentProps> = ({ match }) => {
   const { loadingAuth } = useSelector((state: RootState) => state.auth);
-  const {
-    errors,
-    handleChange,
-    handleSubmit,
-    states,
-  } = UseFormAuth<IResetPasswordState>(
-    resetPassword,
-    {
-      password: "",
-      token: match.params.link,
-    },
-    ResetPasswordValidator
-  );
+  const { errors, handleChange, handleSubmit, states } =
+    UseFormAuth<ResetPasswordData>(
+      resetPassword,
+      {
+        password: "",
+        confirmPassword: "",
+        token: match.params.link,
+      },
+      ResetPasswordValidator
+    );
   useEffect(() => {
     store.dispatch({ type: CLEAR_AUTH_ERRORS });
     store.dispatch({ type: CLEAR_AUTH_MESSAGE });
@@ -47,6 +44,7 @@ const ResetPassword: React.FC<ChildComponentProps> = ({ match }) => {
       <form onSubmit={handleSubmit}>
         <MyTextField
           autofocus={true}
+          label="password"
           type="password"
           name="password"
           value={states.password}

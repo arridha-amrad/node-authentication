@@ -1,7 +1,7 @@
 // must be placed on top
 import { config } from 'dotenv';
 config({ path: `.env.${process.env.NODE_ENV.trim()}` });
-import configEnv from './Config';
+import configEnv from './config';
 import cors from 'cors';
 import express, {
    Request,
@@ -15,7 +15,7 @@ import { ExceptionType } from './interfacesAndTypes/ExceptionTypes';
 import AuthRoutes from './routes/AuthRoutes';
 import UserRoutes from './routes/UserRoutes';
 import { errorMiddleware } from './middleware/ErrorMiddleware';
-import { connect } from './database/MongoDBInitializer';
+import { connect } from './database/mongoDBInitializer';
 
 console.clear();
 console.log(configEnv.dbURI);

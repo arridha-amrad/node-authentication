@@ -1,35 +1,38 @@
-import { useState, FormEvent, ChangeEvent } from "react";
-import { IFieldError, IValidatorResult } from "../validators/authValidator";
-import { useDispatch } from "react-redux";
+import { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { FieldsError, IValidatorResult } from "../validators/AuthValidator";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const UseFormAuth = <T>(
   callback: (state: T) => void,
   initialState: T,
-  validator: (state: T) => IValidatorResult
+  validator: (state: T) => IValidatorResult<T>
 ) => {
   const [states, setState] = useState<T>(initialState);
-
-  const [errors, setErrors] = useState<IFieldError>();
+  const [errors, setErrors] = useState<FieldsError<T> | null>();
   const dispatch = useDispatch();
+  const { loadingAuth, status } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (status) {
+      setState(initialState);
+    } else {
+      setState({ ...states });
+    }
+    // eslint-disable-next-line
+  }, [status]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { valid, errors: erV } = validator(states);
+    const { valid, errors: validatorErrors } = validator(states);
+    console.log("valid", valid);
+
     if (!valid) {
       setErrors({
-        ...errors,
-        email: erV?.email,
-        username: erV?.username,
-        password: erV?.password,
+        ...validatorErrors,
       });
     } else {
-      setErrors({
-        ...errors,
-        email: "",
-        username: "",
-        password: "",
-      });
-      setState(initialState);
+      setErrors(null);
       dispatch(callback(states));
     }
   };
@@ -46,6 +49,7 @@ const UseFormAuth = <T>(
   return {
     handleSubmit,
     handleChange,
+    loadingAuth,
     states,
     errors,
   };

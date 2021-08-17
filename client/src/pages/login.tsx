@@ -11,7 +11,7 @@ import {
   FormTitle,
 } from "../elements/form.element";
 import UseFormAuth from "../utils/UseFormAuth";
-import { LoginValidator } from "../validators/authValidator";
+import { LoginValidator } from "../validators/AuthValidator";
 import SocialLoginButton from "../components/Button/socialLoginBtn";
 import { VSpacer } from "../elements/spacer.element";
 import { ILoginState } from "../interfaces/auth.state.interfaces";
@@ -62,7 +62,7 @@ const Login: React.FC<ChildComponentProps> = ({
     <FormContainer>
       <Form>
         <FormTitle>authboilerplate</FormTitle>
-        {authErrors !== null && (
+        {typeof authErrors === "string" && (
           <MyAlert message={authErrors} type={"danger"} />
         )}
         {typeof StateMessage === "string" && (
@@ -72,6 +72,7 @@ const Login: React.FC<ChildComponentProps> = ({
         <form onSubmit={handleSubmit}>
           <MyTextField
             autofocus={true}
+            label="username or email"
             type="identity"
             name="identity"
             value={identity}
@@ -79,6 +80,7 @@ const Login: React.FC<ChildComponentProps> = ({
             error={errors?.identity}
           />
           <MyTextField
+            label="password"
             type="password"
             name="password"
             value={password}

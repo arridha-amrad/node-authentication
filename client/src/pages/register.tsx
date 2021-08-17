@@ -4,40 +4,36 @@ import MyTextField from "../components/Form/MyTextField";
 import { Button } from "../elements/button.element";
 import { FormLink } from "../elements/form.element";
 import UseFormAuth from "../utils/UseFormAuth";
-import { SignupValidator } from "../validators/authValidator";
+import { RegisterValidator } from "../validators/AuthValidator";
 import SocialLoginButton from "../components/Button/socialLoginBtn";
 import { VSpacer } from "../elements/spacer.element";
 import { register } from "../redux/actions/auth/auth.actions";
 import { useSelector } from "react-redux";
 import store, { RootState } from "../redux/store";
 import FormWrapper from "../components/Form/FormWrapper";
-import { IRegisterState } from "../interfaces/auth.state.interfaces";
 import {
   CLEAR_AUTH_ERRORS,
   CLEAR_AUTH_MESSAGE,
 } from "../redux/actions/auth/auth.types";
+import { RegisterData } from "../dto/AuthDTO";
 
-interface RegsiterProps {}
+interface RegisterProps {}
 
-const Regsiter: React.FC<RegsiterProps> = () => {
+const Register: React.FC<RegisterProps> = () => {
   document.title = "Register";
-  const {
-    states,
-    handleSubmit,
-    handleChange,
-    errors,
-  } = UseFormAuth<IRegisterState>(
-    register,
-    {
-      email: "",
-      username: "",
-      password: "",
-    },
-    SignupValidator
-  );
+  const { states, handleSubmit, handleChange, errors, loadingAuth } =
+    UseFormAuth<RegisterData>(
+      register,
+      {
+        email: "",
+        username: "",
+        password: "",
+        confirmPassword: "",
+      },
+      RegisterValidator
+    );
 
-  const { loadingAuth } = useSelector((state: RootState) => state.auth);
-  const { username, email, password } = states;
+  const { username, email, password, confirmPassword } = states;
 
   useEffect(() => {
     store.dispatch({ type: CLEAR_AUTH_ERRORS });
@@ -49,6 +45,7 @@ const Regsiter: React.FC<RegsiterProps> = () => {
       <form onSubmit={handleSubmit}>
         <MyTextField
           autofocus={true}
+          label="username"
           type="username"
           name="username"
           value={username}
@@ -56,6 +53,7 @@ const Regsiter: React.FC<RegsiterProps> = () => {
           error={errors?.username}
         />
         <MyTextField
+          label="email"
           type="email"
           name="email"
           value={email}
@@ -63,11 +61,20 @@ const Regsiter: React.FC<RegsiterProps> = () => {
           error={errors?.email}
         />
         <MyTextField
+          label="password"
           type="password"
           name="password"
           value={password}
           onChange={handleChange}
           error={errors?.password}
+        />
+        <MyTextField
+          label="Confirm Password"
+          type="password"
+          name="confirmPassword"
+          value={confirmPassword}
+          onChange={handleChange}
+          error={errors?.confirmPassword}
         />
         <VSpacer />
         <Button
@@ -76,7 +83,11 @@ const Regsiter: React.FC<RegsiterProps> = () => {
           aa_bg="#9c27b0"
           aa_height="50px"
           disabled={
-            username === "" || email === "" || password === "" || loadingAuth
+            username === "" ||
+            email === "" ||
+            password === "" ||
+            confirmPassword === "" ||
+            loadingAuth
           }
         >
           {loadingAuth ? "loading..." : "Register"}
@@ -95,4 +106,4 @@ const Regsiter: React.FC<RegsiterProps> = () => {
   );
 };
 
-export default Regsiter;
+export default Register;

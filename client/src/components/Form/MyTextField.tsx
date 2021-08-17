@@ -20,6 +20,7 @@ import { VSpacer } from "../../elements/spacer.element";
 
 export interface MyTextFieldProps {
   type: "username" | "password" | "email" | "identity";
+  label: string;
   name: string;
   value: string;
   error?: string | null;
@@ -29,6 +30,7 @@ export interface MyTextFieldProps {
 const MyTextField: React.FC<MyTextFieldProps> = ({
   type,
   error,
+  label,
   autofocus,
   ...props
 }) => {
@@ -37,15 +39,7 @@ const MyTextField: React.FC<MyTextFieldProps> = ({
   return (
     <>
       <FormGroup>
-        <FormLabel>
-          {type === "email"
-            ? "Email"
-            : type === "username"
-            ? "Username"
-            : type === "password"
-            ? "Password"
-            : "Username or Email"}
-        </FormLabel>
+        <FormLabel>{label}</FormLabel>
         <FormField>
           <IconField type="button" aa_cursor="text">
             <InputIcon
@@ -63,15 +57,6 @@ const MyTextField: React.FC<MyTextFieldProps> = ({
             {...props}
             autoFocus={autofocus}
             type={type === "password" && !showPassword ? "password" : "text"}
-            placeholder={
-              type === "email"
-                ? "e-mail"
-                : type === "username"
-                ? "username"
-                : type === "identity"
-                ? "username or email"
-                : "password"
-            }
           />
           {type !== "password" ? null : (
             <IconFieldRight>

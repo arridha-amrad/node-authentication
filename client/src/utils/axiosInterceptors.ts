@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getAcessToken, setAccessToken } from "../setAccessToken";
 
-const baseURL = "http://localhost:8080/api/";
+const baseURL = "http://localhost:5000/api/";
 
 let headers: any = {
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 if (getAcessToken()) {

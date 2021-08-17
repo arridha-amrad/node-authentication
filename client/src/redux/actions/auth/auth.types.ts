@@ -75,3 +75,7 @@ export type LoginDispatch =
   | LoginError
   | SetUserSuccess
   | SetAuthenticated;
+
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAILURE = "REGISTER_FAILURE";
+export const SET_REQUEST_STATUS = "SET_REQUEST_STATUS";

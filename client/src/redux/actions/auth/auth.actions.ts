@@ -22,14 +22,49 @@ import {
   RESET_PASSWORD_ERROR,
   RESET_PASSWORD_SUCCESS,
   LOGOUT,
+  REGISTER_SUCCESS,
+  REGISTER_FAILURE,
+  SET_REQUEST_STATUS,
 } from "./auth.types";
 import { RESET_USER } from "../user/user.types";
 import axiosInstance from "../../../utils/axiosInterceptors";
 import { meQuery } from "../user/user.action";
+import { RegisterData } from "../../../dto/AuthDTO";
+
+export type AuthActionsType =
+  | { type: typeof REGISTER_SUCCESS; payload: string }
+  | { type: typeof REGISTER_FAILURE; payload: string }
+  | { type: typeof CLEAR_AUTH_ERRORS }
+  | { type: typeof CLEAR_AUTH_MESSAGE }
+  | { type: typeof LOADING_AUTH }
+  | { type: typeof SET_REQUEST_STATUS };
+
+export const register =
+  (registrationData: RegisterData) =>
+  async (dispatch: Dispatch<AuthActionsType>) => {
+    dispatch({ type: CLEAR_AUTH_ERRORS });
+    dispatch({ type: CLEAR_AUTH_MESSAGE });
+    dispatch({ type: SET_REQUEST_STATUS });
+    dispatch({ type: LOADING_AUTH });
+    try {
+      const result = await axiosInstance.post(
+        "/auth/register",
+        registrationData
+      );
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: result.data.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: "REGISTER_FAILURE",
+        payload: err.response.data.message,
+      });
+    }
+  };
 
 export const googleAuth =
   (tokenId: string) => async (dispatch: Dispatch<any>) => {
-    dispatch({ type: LOADING_AUTH } as const);
     try {
       const res = await axiosInstance.post("/auth/googleAuth", { tokenId });
       dispatch({
@@ -47,30 +82,26 @@ export const googleAuth =
     }
   };
 
-export const register =
-  (formData: IRegisterState) =>
-  async (dispatch: Dispatch<RegisterDispatch>) => {
-    dispatch({ type: CLEAR_AUTH_MESSAGE } as const);
-    dispatch({ type: CLEAR_AUTH_ERRORS } as const);
-    dispatch({ type: LOADING_AUTH } as const);
-    try {
-      const res: AxiosResponse<Signup> = await axiosInstance.post(
-        "/auth/register",
-        formData
-      );
-      // console.log(res.data)
-      dispatch({
-        type: SIGNUP_SUCCESS,
-        payload: res.data.success!.message,
-      } as const);
-    } catch (err) {
-      console.log(err.response);
-      dispatch({
-        type: SIGNUP_ERROR,
-        payload: err.response.data.errors.generic,
-      } as const);
-    }
-  };
+// export const register =
+//   (formData: RegisterData) => async (dispatch: Dispatch<RegisterDispatch>) => {
+//     dispatch({ type: CLEAR_AUTH_MESSAGE } as const);
+//     dispatch({ type: CLEAR_AUTH_ERRORS } as const);
+//     dispatch({ type: LOADING_AUTH } as const);
+//     try {
+//       const res = await axiosInstance.post("/auth/register", formData);
+//       // console.log(res.data)
+//       dispatch({
+//         type: SIGNUP_SUCCESS,
+//         payload: res.data.success!.message,
+//       } as const);
+//     } catch (err) {
+//       console.log(err.response);
+//       dispatch({
+//         type: SIGNUP_ERROR,
+//         payload: err.response.data.errors.generic,
+//       } as const);
+//     }
+//   };
 
 export const login =
   (formData: ILoginState) => async (dispatch: Dispatch<any>) => {

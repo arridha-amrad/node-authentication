@@ -1,58 +1,55 @@
 import {
-  ILoginState,
-  IRegisterState,
-} from "../interfaces/auth.state.interfaces";
-import { IForgotPasswordField } from "../pages/forgot-password";
-import { IResetPasswordField } from "../pages/reset-password";
+  ForgotPasswordData,
+  LoginData,
+  RegisterData,
+  ResetPasswordData,
+} from "../dto/AuthDTO";
 
-export interface IFieldError {
-  username?: string;
-  email?: string;
-  password?: string;
-  identity?: string;
-}
-export interface IValidatorResult {
-  errors?: IFieldError;
+export interface IValidatorResult<T> {
+  errors?: Partial<T>;
   valid: boolean;
 }
 
-const errors: IFieldError = {};
+const regExp_password = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/;
+const regExp_email =
+  /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
 
-export const SignupValidator = (options: IRegisterState): IValidatorResult => {
-  const { username, email, password } = options;
+export type FieldsError<T> = Partial<Record<keyof T, string>>;
+
+export const RegisterValidator = (
+  options: RegisterData
+): IValidatorResult<RegisterData> => {
+  const { username, email, password, confirmPassword } = options;
+  const errors: FieldsError<RegisterData> = {};
   if (username.length < 6) {
     errors.username = "username requires 6 characters or more";
   } else {
-    delete errors["username"];
+    delete errors.username;
   }
-
-  const regExp_email = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
   if (!email.match(regExp_email)) {
     errors.email = "Please input your valid email";
   } else {
     delete errors.email;
   }
-
-  if (password.trim() === "") {
-    errors.password = "Password is required";
-  } else {
-    delete errors.password;
-  }
-
-  // const regExp_password = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   // if (!password.match(regExp_password)) {
   //   errors.password =
-  //     "Password require at least 6 characters with combination uppercase, letter, number and special character";
+  //     "password require at least 6 characters with combination uppercase, letter, and number";
   // } else {
   //   delete errors.password;
   // }
+  if (confirmPassword !== password) {
+    errors.confirmPassword = "password not match";
+  }
   return {
     errors,
     valid: Object.keys(errors).length < 1,
   };
 };
 
-export const LoginValidator = (options: ILoginState): IValidatorResult => {
+export const LoginValidator = (
+  options: LoginData
+): IValidatorResult<LoginData> => {
+  const errors: Partial<Record<keyof LoginData, string>> = {};
   if (options.identity.trim() === "") {
     errors.identity = "please input username or password";
   } else {
@@ -70,8 +67,9 @@ export const LoginValidator = (options: ILoginState): IValidatorResult => {
 };
 
 export const ForgotPasswordValidator = (
-  options: IForgotPasswordField
-): IValidatorResult => {
+  options: ForgotPasswordData
+): IValidatorResult<ForgotPasswordData> => {
+  const errors: Partial<Record<keyof ForgotPasswordData, string>> = {};
   if (options.email.trim() === "") {
     errors.email = "Please enter your email";
   } else {
@@ -84,13 +82,14 @@ export const ForgotPasswordValidator = (
 };
 
 export const ResetPasswordValidator = (
-  options: IResetPasswordField
-): IValidatorResult => {
-  const regExp_password = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-  // if (!options.password.match(regExp_password)) {
-  if (options.password.trim() === "") {
+  options: ResetPasswordData
+): IValidatorResult<ResetPasswordData> => {
+  const errors: Partial<Record<keyof ResetPasswordData, string>> = {};
+  if (options.password !== options.confirmPassword) {
+    errors.password = "password not match";
+  } else if (!options.password.match(regExp_password)) {
     errors.password =
-      "password require at least 6 characters with combination uppercase, letter, number and special character";
+      "password require at least 6 characters with combination uppercase, letter, and number";
   } else {
     delete errors.password;
   }

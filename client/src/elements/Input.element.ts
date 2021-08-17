@@ -5,7 +5,7 @@ interface InputFieldProps {
   aa_onFocusShadow?: boolean;
   aa_noBorder?: boolean;
   aa_isError?: boolean;
-  aa_densed?: boolean;
+  aa_isDense?: boolean;
 }
 
 interface IconFieldProps {
@@ -122,28 +122,13 @@ export const InputField = styled.input<InputFieldProps>`
       : props.aa_noBorder
       ? "none"
       : "1px solid #ccc"};
-  padding-top: ${(props) => (props.aa_densed ? "0.5rem" : "0.8rem")};
-  padding-bottom: ${(props) => (props.aa_densed ? "0.5rem" : "0.8rem")};
+  padding-top: ${(props) => (props.aa_isDense ? "0.5rem" : "0.8rem")};
+  padding-bottom: ${(props) => (props.aa_isDense ? "0.5rem" : "0.8rem")};
   padding-left: 4rem;
   padding-right: 2rem;
   &:focus {
     border: none;
     box-shadow: 0px 0px 1px 2px #c921f3;
-
-    /* box-shadow: ${(props) =>
-      props.aa_isError
-        ? "none"
-        : props.aa_onFocusShadow
-        ? "1px 1px 10px 1px rgba(205, 146, 216, 0.47)"
-        : props.aa_noBorder && "none"};
-    transition: box-shadow 0.5s; */
-    /* -moz-outline-radius: 5px;
-    outline: ${(props) =>
-      props.aa_noBorder
-        ? "none"
-        : props.aa_isError
-        ? "2px solid red"
-        : "2px solid #c921f3"}; */
   }
   &::placeholder {
     opacity: 0.4;

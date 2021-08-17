@@ -14,7 +14,7 @@ import {
 } from "../redux/actions/auth/auth.types";
 import store, { RootState } from "../redux/store";
 import UseFormAuth from "../utils/UseFormAuth";
-import { ForgotPasswordValidator } from "../validators/authValidator";
+import { ForgotPasswordValidator } from "../validators/AuthValidator";
 
 interface ForgotPasswordProps {}
 
@@ -25,18 +25,14 @@ export interface IForgotPasswordField {
 const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
   document.title = "Forgot Password";
   const { loadingAuth } = useSelector((state: RootState) => state.auth);
-  const {
-    errors,
-    handleChange,
-    handleSubmit,
-    states,
-  } = UseFormAuth<IForgotPasswordState>(
-    forgotPassword,
-    {
-      email: "",
-    },
-    ForgotPasswordValidator
-  );
+  const { errors, handleChange, handleSubmit, states } =
+    UseFormAuth<IForgotPasswordState>(
+      forgotPassword,
+      {
+        email: "",
+      },
+      ForgotPasswordValidator
+    );
   useEffect(() => {
     store.dispatch({ type: CLEAR_AUTH_ERRORS });
     store.dispatch({ type: CLEAR_AUTH_MESSAGE });
@@ -47,6 +43,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
       <form onSubmit={handleSubmit}>
         <MyTextField
           autofocus={true}
+          label="email"
           type="email"
           name="email"
           value={states.email}
