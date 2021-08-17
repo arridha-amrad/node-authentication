@@ -8,7 +8,7 @@ import EmailConfirmation from "./pages/email-confirmation";
 import ForgotPassword from "./pages/forgot-password";
 import Home from "./pages/home";
 import Login from "./pages/login";
-import Regsiter from "./pages/register";
+import Register from "./pages/register";
 import ResetPassword from "./pages/reset-password";
 import Test from "./pages/test";
 import {
@@ -56,7 +56,7 @@ const App = () => {
       <Switch>
         <SecureRoute exact path="/" component={Home} />
         <SecureRoute exact path="/test" component={Test} />
-        <Route exact path="/register" component={Regsiter} />
+        <Route exact path="/register" component={Register} />
         <Route exact path="/confirm/:link" component={EmailConfirmation} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgot-password" component={ForgotPassword} />

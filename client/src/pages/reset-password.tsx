@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import FormWrapper from "../components/Form/FormWrapper";
 import MyTextField from "../components/Form/MyTextField";
@@ -8,11 +7,6 @@ import { Button } from "../elements/button.element";
 import { FormLink } from "../elements/form.element";
 import { VSpacer } from "../elements/spacer.element";
 import { resetPassword } from "../redux/actions/auth/auth.actions";
-import {
-  CLEAR_AUTH_ERRORS,
-  CLEAR_AUTH_MESSAGE,
-} from "../redux/actions/auth/auth.types";
-import store, { RootState } from "../redux/store";
 import UseFormAuth from "../utils/UseFormAuth";
 import { ResetPasswordValidator } from "../validators/AuthValidator";
 
@@ -23,8 +17,8 @@ export interface IResetPasswordField {
 }
 
 const ResetPassword: React.FC<ChildComponentProps> = ({ match }) => {
-  const { loadingAuth } = useSelector((state: RootState) => state.auth);
-  const { errors, handleChange, handleSubmit, states } =
+  document.title = "Reset Password";
+  const { errors, handleChange, handleSubmit, states, loadingAuth } =
     UseFormAuth<ResetPasswordData>(
       resetPassword,
       {
@@ -34,11 +28,6 @@ const ResetPassword: React.FC<ChildComponentProps> = ({ match }) => {
       },
       ResetPasswordValidator
     );
-  useEffect(() => {
-    store.dispatch({ type: CLEAR_AUTH_ERRORS });
-    store.dispatch({ type: CLEAR_AUTH_MESSAGE });
-    // eslint-disable-next-line
-  }, []);
   return (
     <FormWrapper>
       <form onSubmit={handleSubmit}>
@@ -51,13 +40,25 @@ const ResetPassword: React.FC<ChildComponentProps> = ({ match }) => {
           onChange={handleChange}
           error={errors?.password}
         />
+        <MyTextField
+          label="confirm password"
+          type="password"
+          name="confirmPassword"
+          value={states.confirmPassword}
+          onChange={handleChange}
+          error={errors?.confirmPassword}
+        />
         <VSpacer />
         <Button
           aa_isFullWidth
           aa_color="#fff"
           aa_bg="#9c27b0"
           aa_height="50px"
-          disabled={states.password === ""}
+          disabled={
+            states.password === "" ||
+            states.confirmPassword === "" ||
+            loadingAuth
+          }
         >
           {loadingAuth ? "loading..." : "Submit"}
         </Button>

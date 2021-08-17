@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Axios from "axios";
 import { Redirect, RouteComponentProps } from "react-router-dom";
+import axiosInstance from "../utils/axiosInterceptors";
 
-interface ChildComponentProps extends RouteComponentProps<any> { }
+interface ChildComponentProps extends RouteComponentProps<any> {}
 
 const EmailConfirmation: React.FC<ChildComponentProps> = (props) => {
   const [confirm, setConfirm] = useState(false);
@@ -10,9 +10,11 @@ const EmailConfirmation: React.FC<ChildComponentProps> = (props) => {
 
   useEffect(() => {
     const link = props.match.params.link;
-    Axios.post(`http://localhost:8080/api/auth/verify-email/${link}`)
+    axiosInstance
+      .put(`/auth/verify-email/${link}`)
       .then((res) => {
-        setMessage(res.data.success.message);
+        console.log(res.data);
+        setMessage(res.data.data);
         setConfirm(true);
       })
       .catch((err) => {
@@ -26,8 +28,8 @@ const EmailConfirmation: React.FC<ChildComponentProps> = (props) => {
       {confirm ? (
         <Redirect to={{ pathname: "/login", state: message }} />
       ) : (
-          "Invalid link"
-        )}
+        "Invalid link"
+      )}
     </div>
   );
 };

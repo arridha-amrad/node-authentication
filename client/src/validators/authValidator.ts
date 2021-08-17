@@ -39,6 +39,8 @@ export const RegisterValidator = (
   // }
   if (confirmPassword !== password) {
     errors.confirmPassword = "password not match";
+  } else {
+    delete errors.confirmPassword;
   }
   return {
     errors,
@@ -86,13 +88,14 @@ export const ResetPasswordValidator = (
 ): IValidatorResult<ResetPasswordData> => {
   const errors: Partial<Record<keyof ResetPasswordData, string>> = {};
   if (options.password !== options.confirmPassword) {
-    errors.password = "password not match";
-  } else if (!options.password.match(regExp_password)) {
-    errors.password =
-      "password require at least 6 characters with combination uppercase, letter, and number";
+    errors.confirmPassword = "password not match";
   } else {
-    delete errors.password;
+    delete errors.confirmPassword;
   }
+  // else if (!options.password.match(regExp_password)) {
+  //   errors.password =
+  //     "password require at least 6 characters with combination uppercase, letter, and number";
+  // }
   return {
     errors,
     valid: Object.keys(errors).length < 1,

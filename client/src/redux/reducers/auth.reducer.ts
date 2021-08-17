@@ -1,22 +1,4 @@
-import { AnyAction } from "redux";
 import { AuthActionsType } from "../actions/auth/auth.actions";
-import {
-  LOADING_AUTH,
-  SET_AUTH_MESSAGE,
-  SIGNUP_SUCCESS,
-  LOGIN_SUCCESS,
-  LOGIN_ERROR,
-  SIGNUP_ERROR,
-  CLEAR_AUTH_ERRORS,
-  CLEAR_AUTH_MESSAGE,
-  SET_AUTHENTICATED,
-  SET_UNAUTHENTICATED,
-  RESET_PASSWORD_SUCCESS,
-  FORGOT_PASSWORD_SUCCESS,
-  FORGOT_PASSWORD_ERROR,
-  RESET_PASSWORD_ERROR,
-  LOGOUT,
-} from "../actions/auth/auth.types";
 
 export interface AuthState {
   loadingAuth: boolean;
@@ -44,12 +26,14 @@ const AuthReducer = (
         ...state,
         loadingAuth: true,
       };
-    case "SET_REQUEST_STATUS":
+    case "RESET_REQUEST_STATUS":
       return {
         ...state,
         status: false,
       };
     case "REGISTER_SUCCESS":
+    case "FORGOT_PASSWORD_SUCCESS":
+    case "RESET_PASSWORD_SUCCESS":
       return {
         ...state,
         authMessage: action.payload,
@@ -57,6 +41,8 @@ const AuthReducer = (
         status: true,
       };
     case "REGISTER_FAILURE":
+    case "FORGOT_PASSWORD_ERROR":
+    case "RESET_PASSWORD_ERROR":
       return {
         ...state,
         authErrors: action.payload,
