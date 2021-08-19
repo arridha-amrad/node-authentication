@@ -5,7 +5,7 @@ import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { SocialButton } from "../../elements/button.element";
 import SecretKey from "../../secret.json";
 import { useDispatch, useSelector } from "react-redux";
-import { googleAuth } from "../../redux/actions/auth/auth.actions";
+import { googleAuth } from "../../redux/reduxActions/AuthActions";
 import { useHistory } from "react-router-dom";
 import { RootState } from "../../redux/store";
 

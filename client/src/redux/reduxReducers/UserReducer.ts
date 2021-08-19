@@ -1,24 +1,28 @@
 import { AnyAction } from "redux";
-import { IUser } from "../actions/user/IUser";
-import * as types from "../actions/user/user.types";
+import * as types from "../reduxTypes/UserTypes";
 
 export interface UserState {
+  _id: string | null;
+  createdAt: string | null;
+  email: string | null;
+  updatedAt: string | null;
+  username: string | null;
   loadingUser: boolean;
-  user: IUser;
+  isActive: boolean;
+  isLogin: boolean;
+  isVerified: boolean;
 }
 
 const initialState: UserState = {
   loadingUser: false,
-  user: {
-    _id: null,
-    createdAt: null,
-    email: null,
-    isActive: false,
-    isLogin: false,
-    isVerified: false,
-    updatedAt: null,
-    username: null,
-  },
+  _id: null,
+  createdAt: null,
+  email: null,
+  isActive: false,
+  isLogin: false,
+  isVerified: false,
+  updatedAt: null,
+  username: null,
 };
 
 const UserReducer = (state = initialState, action: AnyAction): UserState => {
@@ -37,10 +41,7 @@ const UserReducer = (state = initialState, action: AnyAction): UserState => {
     case types.SET_USER_SUCCESS:
       return {
         ...state,
-        user: {
-          ...state.user,
-          ...action.payload,
-        },
+        ...action.payload,
       };
     case types.RESET_USER:
       return {

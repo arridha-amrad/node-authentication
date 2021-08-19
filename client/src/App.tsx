@@ -1,21 +1,21 @@
 import Axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Loaders from "./components/loaders/loaders";
 import { GlobalStyles } from "./components/styled.globals";
-import EmailConfirmation from "./pages/email-confirmation";
-import ForgotPassword from "./pages/forgot-password";
-import Home from "./pages/home";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import ResetPassword from "./pages/reset-password";
-import Test from "./pages/test";
+import EmailConfirmation from "./pages/EmailConfirmation";
+import ForgotPassword from "./pages/ForgotPassword";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
+import Test from "./pages/Test";
 import {
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
-} from "./redux/actions/auth/auth.types";
-import { meQuery } from "./redux/actions/user/user.action";
+} from "./redux/reduxTypes/AuthTypes";
+import { meQuery } from "./redux/reduxActions/UserActions";
 import store from "./redux/store";
 import { setAccessToken } from "./setAccessToken";
 import SecureRoute from "./utils/SecureRoute";

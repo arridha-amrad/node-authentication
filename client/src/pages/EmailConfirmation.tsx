@@ -4,12 +4,12 @@ import axiosInstance from "../utils/axiosInterceptors";
 
 interface ChildComponentProps extends RouteComponentProps<any> {}
 
-const EmailConfirmation: React.FC<ChildComponentProps> = (props) => {
+const EmailConfirmation: React.FC<ChildComponentProps> = ({ match }) => {
   const [confirm, setConfirm] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const link = props.match.params.link;
+    const link = match.params.link;
     axiosInstance
       .put(`/auth/verify-email/${link}`)
       .then((res) => {

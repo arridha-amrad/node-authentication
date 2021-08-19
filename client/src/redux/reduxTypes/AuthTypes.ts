@@ -16,3 +16,18 @@ export const LOGOUT = "LOGOUT";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAILURE = "REGISTER_FAILURE";
 export const RESET_REQUEST_STATUS = "RESET_REQUEST_STATUS";
+
+export type AuthActionsType =
+  | { type: typeof REGISTER_SUCCESS; payload: string }
+  | { type: typeof REGISTER_FAILURE; payload: string }
+  | { type: typeof FORGOT_PASSWORD_SUCCESS; payload: string }
+  | { type: typeof FORGOT_PASSWORD_ERROR; payload: string }
+  | { type: typeof RESET_PASSWORD_SUCCESS; payload: string }
+  | { type: typeof RESET_PASSWORD_ERROR; payload: string }
+  | { type: typeof LOGIN_SUCCESS }
+  | { type: typeof LOGIN_ERROR; payload: string }
+  | { type: typeof CLEAR_AUTH_ERRORS }
+  | { type: typeof CLEAR_AUTH_MESSAGE }
+  | { type: typeof LOADING_AUTH }
+  | { type: typeof LOGOUT }
+  | { type: typeof RESET_REQUEST_STATUS };

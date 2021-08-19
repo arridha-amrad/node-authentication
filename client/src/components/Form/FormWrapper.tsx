@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import {
   Form,
   FormContainer,
@@ -10,22 +11,27 @@ import { VSpacer } from "../../elements/spacer.element";
 import {
   CLEAR_AUTH_ERRORS,
   CLEAR_AUTH_MESSAGE,
-} from "../../redux/actions/auth/auth.types";
+} from "../../redux/reduxTypes/AuthTypes";
 import { RootState } from "../../redux/store";
 import MyAlert from "../Alert";
 
 interface FormWrapperProps {}
 
 const FormWrapper: React.FC<FormWrapperProps> = ({ children }) => {
-  const authState = useSelector((state: RootState) => state.auth);
-  const { authErrors, authMessage } = authState;
+  const { authErrors, authMessage, isAuthenticated, loadingAuth } = useSelector(
+    (state: RootState) => state.auth
+  );
+  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch({ type: CLEAR_AUTH_ERRORS });
     dispatch({ type: CLEAR_AUTH_MESSAGE });
+    if (!loadingAuth && isAuthenticated) {
+      history.push("/");
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [loadingAuth, isAuthenticated]);
 
   return (
     <FormContainer>
@@ -40,9 +46,9 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ children }) => {
         <VSpacer />
         {children}
       </Form>
-      {/* <FormFooter>
+      <FormFooter>
         <p>&copy; Arridha Amrad</p>
-      </FormFooter> */}
+      </FormFooter>
     </FormContainer>
   );
 };

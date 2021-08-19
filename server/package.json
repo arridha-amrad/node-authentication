@@ -1,65 +1,65 @@
 {
-   "name": "auth-boilerplate-cookies",
-   "version": "1.0.0",
-   "description": "",
-   "main": "src/",
-   "scripts": {
-      "dev": "export NODE_ENV=development && ts-node-dev --respawn --transpile-only --no-notify src/",
-      "start": "export NODE_ENV=production && node src/",
-      "prod": "npm run build && npm run start",
-      "build": "tsc",
-      "lint": "eslint src/**/*.ts",
-      "format": "eslint src/**/*.ts --fix",
-      "test": "set NODE_ENV=test && jest"
-   },
-   "husky": {
-      "hooks": {
-         "pre-commit": "yarn lint"
-      }
-   },
-   "keywords": [],
-   "author": "",
-   "license": "ISC",
-   "dependencies": {
-      "argon2": "0.28.2",
-      "cookie": "0.4",
-      "cookie-parser": "1.4.5",
-      "cors": "2.8.5",
-      "dotenv": "10.0.0",
-      "express": "4.17.1",
-      "google-auth-library": "7.6.1",
-      "jsonwebtoken": "8.5.1",
-      "mongoose": "5.13.7",
-      "node-rsa": "^1.1.1",
-      "nodemailer": "6.6.3",
-      "redis": "^3.1.2",
-      "ts-node": "10.2.0",
-      "uuid": "8.3.2"
-   },
-   "devDependencies": {
-      "@types/argon2": "0.15.0",
-      "@types/cookie": "0.4.1",
-      "@types/cookie-parser": "1.4.2",
-      "@types/cors": "2.8.12",
-      "@types/dotenv": "8.2.0",
-      "@types/express": "4.17.13",
-      "@types/jest": "^27.0.1",
-      "@types/jsonwebtoken": "8.5.4",
-      "@types/node": "16.6.1",
-      "@types/node-rsa": "^1.1.1",
-      "@types/nodemailer": "6.4.4",
-      "@types/redis": "^2.8.31",
-      "@types/uuid": "8.3.1",
-      "@typescript-eslint/eslint-plugin": "4.29.2",
-      "@typescript-eslint/parser": "4.29.2",
-      "eslint": "7.32.0",
-      "husky": "7.0.1",
-      "jest": "^27.0.6",
-      "nodemon": "^2.0.12",
-      "prettier": "2.3.2",
-      "supertest": "^6.1.5",
-      "ts-jest": "^27.0.5",
-      "ts-node-dev": "1.1.8",
-      "typescript": "^4.3.5"
-   }
+  "name": "auth-boilerplate-cookies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/",
+  "scripts": {
+    "dev": "export NODE_ENV=development && ts-node-dev --respawn --transpile-only --no-notify src/",
+    "start": "export NODE_ENV=development && npx ts-node src/",
+    "prod": "npm run build && npm run start",
+    "build": "tsc",
+    "lint": "eslint src/**/*.ts",
+    "format": "eslint src/**/*.ts --fix",
+    "test": "set NODE_ENV=test && jest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "0.28.2",
+    "cookie": "0.4",
+    "cookie-parser": "1.4.5",
+    "cors": "2.8.5",
+    "dotenv": "10.0.0",
+    "express": "4.17.1",
+    "google-auth-library": "7.6.1",
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "5.13.7",
+    "node-rsa": "^1.1.1",
+    "nodemailer": "6.6.3",
+    "redis": "^3.1.2",
+    "ts-node": "10.2.0",
+    "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "@types/argon2": "0.15.0",
+    "@types/cookie": "0.4.1",
+    "@types/cookie-parser": "1.4.2",
+    "@types/cors": "2.8.12",
+    "@types/dotenv": "8.2.0",
+    "@types/express": "4.17.13",
+    "@types/jest": "^27.0.1",
+    "@types/jsonwebtoken": "8.5.4",
+    "@types/node": "16.6.1",
+    "@types/node-rsa": "^1.1.1",
+    "@types/nodemailer": "6.4.4",
+    "@types/redis": "^2.8.31",
+    "@types/uuid": "8.3.1",
+    "@typescript-eslint/eslint-plugin": "4.29.2",
+    "@typescript-eslint/parser": "4.29.2",
+    "eslint": "7.32.0",
+    "husky": "7.0.1",
+    "jest": "^27.0.6",
+    "nodemon": "^2.0.12",
+    "prettier": "2.3.2",
+    "supertest": "^6.1.5",
+    "ts-jest": "^27.0.5",
+    "ts-node-dev": "1.1.8",
+    "typescript": "^4.3.5"
+  }
 }

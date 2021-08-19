@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
-import { SET_USER_SUCCESS } from "../auth/auth.types";
-import { LOADING_USER, STOP_LOADING } from "./user.types";
-import axiosInstance from "../../../utils/axiosInterceptors";
+import { SET_USER_SUCCESS } from "../reduxTypes/AuthTypes";
+import { LOADING_USER, STOP_LOADING } from "../reduxTypes/UserTypes";
+import axiosInstance from "../../utils/axiosInterceptors";
 
 export const meQuery = () => async (dispatch: Dispatch<any>) => {
   dispatch({ type: LOADING_USER } as const);

@@ -6,7 +6,7 @@ import { ForgotPasswordData } from "../dto/AuthDTO";
 import { Button } from "../elements/button.element";
 import { FormLink } from "../elements/form.element";
 import { VSpacer } from "../elements/spacer.element";
-import { forgotPassword } from "../redux/actions/auth/auth.actions";
+import { forgotPassword } from "../redux/reduxActions/AuthActions";
 import UseFormAuth from "../utils/UseFormAuth";
 import { ForgotPasswordValidator } from "../validators/AuthValidator";
 

@@ -7,14 +7,14 @@ import UseFormAuth from "../utils/UseFormAuth";
 import { RegisterValidator } from "../validators/AuthValidator";
 import SocialLoginButton from "../components/Button/socialLoginBtn";
 import { VSpacer } from "../elements/spacer.element";
-import { register } from "../redux/actions/auth/auth.actions";
+import { register } from "../redux/reduxActions/AuthActions";
 import { useSelector } from "react-redux";
 import store, { RootState } from "../redux/store";
 import FormWrapper from "../components/Form/FormWrapper";
 import {
   CLEAR_AUTH_ERRORS,
   CLEAR_AUTH_MESSAGE,
-} from "../redux/actions/auth/auth.types";
+} from "../redux/reduxTypes/AuthTypes";
 import { RegisterData } from "../dto/AuthDTO";
 
 interface RegisterProps {}

@@ -1,4 +1,4 @@
-import { AuthActionsType } from "../actions/auth/auth.actions";
+import { AuthActionsType } from "../reduxTypes/AuthTypes";
 
 export interface AuthState {
   loadingAuth: boolean;
@@ -21,6 +21,11 @@ const AuthReducer = (
   action: AuthActionsType
 ): AuthState => {
   switch (action.type) {
+    case "LOGOUT":
+      return {
+        ...state,
+        ...initialState,
+      };
     case "LOADING_AUTH":
       return {
         ...state,
@@ -31,6 +36,13 @@ const AuthReducer = (
         ...state,
         status: false,
       };
+    case "LOGIN_SUCCESS":
+      return {
+        ...state,
+        status: true,
+        loadingAuth: false,
+        isAuthenticated: true,
+      };
     case "REGISTER_SUCCESS":
     case "FORGOT_PASSWORD_SUCCESS":
     case "RESET_PASSWORD_SUCCESS":
@@ -40,6 +52,7 @@ const AuthReducer = (
         loadingAuth: false,
         status: true,
       };
+    case "LOGIN_ERROR":
     case "REGISTER_FAILURE":
     case "FORGOT_PASSWORD_ERROR":
     case "RESET_PASSWORD_ERROR":
