@@ -1,3 +1,5 @@
+import { SetUserData } from "../../dto/AuthDTO";
+
 export const LOADING_AUTH = "LOADING_AUTH";
 export const CLEAR_AUTH_ERRORS = "CLEAR_AUTH_ERRORS";
 export const CLEAR_AUTH_MESSAGE = "CLEAR_AUTH_MESSAGE";
@@ -16,6 +18,7 @@ export const LOGOUT = "LOGOUT";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAILURE = "REGISTER_FAILURE";
 export const RESET_REQUEST_STATUS = "RESET_REQUEST_STATUS";
+export const STOP_LOADING_AUTH = "STOP_LOADING_AUTH";
 
 export type AuthActionsType =
   | { type: typeof REGISTER_SUCCESS; payload: string }
@@ -29,5 +32,9 @@ export type AuthActionsType =
   | { type: typeof CLEAR_AUTH_ERRORS }
   | { type: typeof CLEAR_AUTH_MESSAGE }
   | { type: typeof LOADING_AUTH }
+  | { type: typeof STOP_LOADING_AUTH }
   | { type: typeof LOGOUT }
+  | { type: typeof SET_USER_SUCCESS; payload: SetUserData }
+  | { type: typeof SET_USER_FAILED }
+  | { type: typeof SET_UNAUTHENTICATED }
   | { type: typeof RESET_REQUEST_STATUS };

@@ -17,11 +17,28 @@ const requiredDispatch = (dispatch: Dispatch<AuthActionsType>) => {
   dispatch({ type: "LOADING_AUTH" });
 };
 
+export const fetchLoginUser =
+  () => async (dispatch: Dispatch<AuthActionsType>) => {
+    requiredDispatch(dispatch);
+    try {
+      const result = await axiosInstance.get("/user/me");
+      console.log("fetched login user : ", result.data);
+      dispatch({
+        type: "SET_USER_SUCCESS",
+        payload: result.data,
+      });
+    } catch (error) {
+      dispatch({
+        type: "SET_USER_FAILED",
+      });
+      console.log(error);
+    }
+  };
+
 export const logout = () => async (dispatch: Dispatch<AuthActionsType>) => {
   dispatch({ type: "LOADING_AUTH" });
   try {
     await axiosInstance.post("/auth/logout");
-    localStorage.removeItem("user");
     dispatch({ type: "LOGOUT" });
     window.location.href = "/login";
   } catch (err) {
@@ -128,24 +145,3 @@ export const googleAuth =
       } as const);
     }
   };
-
-// export const register =
-//   (formData: RegisterData) => async (dispatch: Dispatch<RegisterDispatch>) => {
-//     dispatch({ type: CLEAR_AUTH_MESSAGE } as const);
-//     dispatch({ type: CLEAR_AUTH_ERRORS } as const);
-//     dispatch({ type: LOADING_AUTH } as const);
-//     try {
-//       const res = await axiosInstance.post("/auth/register", formData);
-//       // console.log(res.data)
-//       dispatch({
-//         type: SIGNUP_SUCCESS,
-//         payload: res.data.success!.message,
-//       } as const);
-//     } catch (err) {
-//       console.log(err.response);
-//       dispatch({
-//         type: SIGNUP_ERROR,
-//         payload: err.response.data.errors.generic,
-//       } as const);
-//     }
-//   };

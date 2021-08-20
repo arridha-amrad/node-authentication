@@ -8,9 +8,9 @@ const rsaPublicKey = new NodeRSA(publicKey);
 const rsaPrivateKey = new NodeRSA(privateKey);
 
 export const encrypt = (text: string): string => {
-   return rsaPublicKey.encrypt(text, 'base64');
+  return rsaPublicKey.encrypt(text, 'base64');
 };
 
 export const decrypt = (text: string): string => {
-   return rsaPrivateKey.decrypt(text, 'utf8');
+  return rsaPrivateKey.decrypt(text, 'utf8');
 };

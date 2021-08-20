@@ -4,6 +4,7 @@ export interface AuthData {
   password: string;
   confirmPassword: string;
   identity: string;
+  isLogin: boolean;
 }
 
 export type RegisterData = Pick<
@@ -19,3 +20,5 @@ export type ResetPasswordData = Pick<
   AuthData,
   "password" | "confirmPassword"
 > & { token: string };
+
+export type SetUserData = Pick<AuthData, "email" | "username" | "isLogin">;

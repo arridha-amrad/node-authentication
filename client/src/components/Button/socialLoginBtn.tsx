@@ -7,7 +7,7 @@ import SecretKey from "../../secret.json";
 import { useDispatch, useSelector } from "react-redux";
 import { googleAuth } from "../../redux/reduxActions/AuthActions";
 import { useHistory } from "react-router-dom";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../redux/Store";
 
 interface SocialLoginButtonProps {
   loadingAuth?: boolean;
@@ -21,6 +21,7 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
+  // eslint-disable-next-line
   const responseGoogle = (gRes: GoogleLoginResponse) => {
     dispatch(googleAuth(gRes.tokenId));
   };

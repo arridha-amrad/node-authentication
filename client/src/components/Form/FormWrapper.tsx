@@ -12,7 +12,7 @@ import {
   CLEAR_AUTH_ERRORS,
   CLEAR_AUTH_MESSAGE,
 } from "../../redux/reduxTypes/AuthTypes";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../redux/Store";
 import MyAlert from "../Alert";
 
 interface FormWrapperProps {}

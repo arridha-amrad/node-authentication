@@ -1,5 +1,5 @@
 import AppBar from "../components/Navbar";
-import { RootState } from "../redux/store";
+import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/reduxActions/AuthActions";
 import { Button } from "../elements/button.element";

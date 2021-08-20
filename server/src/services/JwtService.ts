@@ -9,7 +9,7 @@ import { HTTP_CODE } from '../enums/HTTP_CODE';
 import Exception from '../exceptions/Exception';
 import * as fs from 'fs';
 import { IUserModel } from '../interfacesAndTypes/UserInterfaces';
-import { decrypt } from '../utils/Encryptor';
+import { decrypt } from '../utils/Encrypt';
 
 const publicKey = fs.readFileSync('keys/public.pem', 'utf-8');
 const privateKey = fs.readFileSync('keys/private.pem', 'utf-8');
@@ -60,7 +60,7 @@ export const verifyTokenLink = (token: string): Promise<LinkPayloadType> => {
 
 //* ACCESS TOKEN
 const accessTokenSignOptions: jwt.SignOptions = {
-  expiresIn: '5d',
+  expiresIn: '5s',
   issuer: 'node-authentication',
   audience: 'node-authentication-audience',
   subject: 'authentication',
@@ -69,7 +69,7 @@ const accessTokenSignOptions: jwt.SignOptions = {
 
 const accessTokenVerifyOptions: jwt.VerifyOptions = {
   algorithms: ['RS256'],
-  maxAge: '5d',
+  maxAge: '5s',
   issuer: 'node-authentication',
   audience: 'node-authentication-audience',
   subject: 'authentication',
@@ -97,7 +97,7 @@ export const signAccessToken = (user: IUserModel): Promise<string | undefined> =
 
 // eslint-disable-next-line
 export function verifyAccessToken(req: Request, res: Response, next: NextFunction): void {
-  const encryptedToken = req.cookies.LOGIN_CREDENTIALS;
+  const encryptedToken = req.cookies.LOGIN_COOKIE;
   if (!encryptedToken) {
     return next(new Exception(HTTP_CODE.UNAUTHORIZED, 'You are not authorized'));
   }
@@ -114,17 +114,6 @@ export function verifyAccessToken(req: Request, res: Response, next: NextFunctio
     req.userId = result.userId;
     next();
   });
-  // const payload = jwt.verify(
-  //    token,
-  //    publicKey,
-  //    accessTokenVerifyOptions,
-  // ) as AccessTokenPayloadType;
-  // if (!payload.userId) {
-  //    console.log('verify access token error');
-  //    return next(new Exception(HTTP_CODE.FORBIDDEN, 'Server Error'));
-  // }
-  // req.userId = payload.userId;
-  // next();
 }
 
 //* REFRESH TOKEN

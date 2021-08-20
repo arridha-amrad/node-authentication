@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "../redux/Store";
+import { FC } from "react";
 
 interface IProps {
   component?: React.FC;
@@ -9,23 +10,23 @@ interface IProps {
   path?: string;
 }
 
-const SecureRoute: React.FC<IProps> = (props) => {
+const SecureRoute: FC<IProps> = (props) => {
   const [isLoadingAuth, setLoadingAuth] = useState(true);
-  const [isA, setIsA] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const { isAuthenticated, loadingAuth } = useSelector(
     (state: RootState) => state.auth
   );
 
   useEffect(() => {
-    setIsA(isAuthenticated);
+    setIsLogin(isAuthenticated);
     setLoadingAuth(loadingAuth);
   }, [isAuthenticated, loadingAuth]);
 
-  return !isA && !isLoadingAuth ? (
+  return !isLoadingAuth && !isLogin ? (
     <Redirect to="/login" />
   ) : (
-    <Route path={props.path} exact={props.exact} component={props.component} />
+    <Route {...props} component={props.component} />
   );
 };
 

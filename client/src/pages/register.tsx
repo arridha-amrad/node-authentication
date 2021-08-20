@@ -8,8 +8,7 @@ import { RegisterValidator } from "../validators/AuthValidator";
 import SocialLoginButton from "../components/Button/socialLoginBtn";
 import { VSpacer } from "../elements/spacer.element";
 import { register } from "../redux/reduxActions/AuthActions";
-import { useSelector } from "react-redux";
-import store, { RootState } from "../redux/store";
+import store from "../redux/Store";
 import FormWrapper from "../components/Form/FormWrapper";
 import {
   CLEAR_AUTH_ERRORS,

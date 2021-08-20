@@ -21,10 +21,16 @@ const AuthReducer = (
   action: AuthActionsType
 ): AuthState => {
   switch (action.type) {
-    case "LOGOUT":
+    case "STOP_LOADING_AUTH":
       return {
         ...state,
-        ...initialState,
+        loadingAuth: false,
+      };
+    case "SET_USER_SUCCESS":
+      return {
+        ...state,
+        isAuthenticated: true,
+        loadingAuth: false,
       };
     case "LOADING_AUTH":
       return {
@@ -72,76 +78,19 @@ const AuthReducer = (
         ...state,
         authMessage: undefined,
       };
+    case "SET_UNAUTHENTICATED":
+      return {
+        ...state,
+        isAuthenticated: false,
+      };
+    case "LOGOUT":
+      return {
+        ...state,
+        ...initialState,
+      };
     default:
       return state;
   }
 };
-
-// const AuthReducer = (state = initialState, action: AnyAction): AuthState => {
-//   switch (action.type) {
-//     case LOADING_AUTH:
-//       return {
-//         ...state,
-//         loadingAuth: true,
-//       };
-//     case SET_AUTH_MESSAGE:
-//       return {
-//         ...state,
-//         authMessage: action.payload,
-//       };
-//     case FORGOT_PASSWORD_SUCCESS:
-//     case RESET_PASSWORD_SUCCESS:
-//     case SIGNUP_SUCCESS:
-//       return {
-//         ...state,
-//         authMessage: action.payload,
-//         loadingAuth: false,
-//       };
-//     case LOGIN_SUCCESS:
-//       return {
-//         ...state,
-//         loadingAuth: false,
-//         isAuthenticated: true,
-//       };
-//     case FORGOT_PASSWORD_ERROR:
-//     case RESET_PASSWORD_ERROR:
-//     case LOGIN_ERROR:
-//     case SIGNUP_ERROR:
-//       return {
-//         ...state,
-//         loadingAuth: false,
-//         authErrors: action.payload,
-//       };
-//     case CLEAR_AUTH_ERRORS:
-//       return {
-//         ...state,
-//         authErrors: null,
-//       };
-//     case CLEAR_AUTH_MESSAGE:
-//       return {
-//         ...state,
-//         authMessage: null,
-//       };
-//     case SET_AUTHENTICATED:
-//       return {
-//         ...state,
-//         isAuthenticated: true,
-//         loadingAuth: false,
-//       };
-//     case SET_UNAUTHENTICATED:
-//       return {
-//         ...state,
-//         isAuthenticated: false,
-//         loadingAuth: false,
-//       };
-//     case LOGOUT:
-//       return {
-//         ...state,
-//         ...initialState,
-//       };
-//     default:
-//       return state;
-//   }
-// };
 
 export default AuthReducer;

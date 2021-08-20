@@ -8,17 +8,15 @@ import { LoginValidator } from "../validators/AuthValidator";
 // import SocialLoginButton from "../components/Button/socialLoginBtn";
 import { VSpacer } from "../elements/spacer.element";
 import { ILoginState } from "../interfaces/auth.state.interfaces";
-import { RouteComponentProps } from "react-router-dom";
 import { login } from "../redux/reduxActions/AuthActions";
 import FormWrapper from "../components/Form/FormWrapper";
+import { FormLink } from "../elements/form.element";
 
-interface ChildComponentProps extends RouteComponentProps<any> {}
+interface ChildComponentProps {}
 
-const Login: React.FC<ChildComponentProps> = ({
-  location: { state: StateMessage },
-  history,
-}) => {
+const Login: React.FC<ChildComponentProps> = () => {
   document.title = "Login";
+
   const { states, handleSubmit, handleChange, errors, loadingAuth } =
     UseFormAuth<ILoginState>(
       login,
@@ -67,6 +65,14 @@ const Login: React.FC<ChildComponentProps> = ({
         </ForgotPassword>
       </form>
       {/* <SocialLoginButton /> */}
+      <FormLink>
+        <span>
+          Doesn't have an account?{" "}
+          <Link style={{ textDecoration: "none" }} to="/register">
+            register
+          </Link>
+        </span>
+      </FormLink>
     </FormWrapper>
   );
 };

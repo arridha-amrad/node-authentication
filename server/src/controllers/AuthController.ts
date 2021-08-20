@@ -18,8 +18,21 @@ import ServerErrorException from '../exceptions/ServerErrorException';
 
 import * as redis from '../database/redisClient';
 
-import { decrypt, encrypt } from '../utils/Encryptor';
-import { LoginRequest, LoginResponse, RegisterRequest } from '../dto/AuthData';
+import { decrypt, encrypt } from '../utils/Encrypt';
+import { LoginRequest, RegisterRequest } from '../dto/AuthData';
+
+export const checkIsAuthenticated = async (req: Request, res: Response): Promise<void> => {
+  const cookieId = req.cookies.COOKIE_ID;
+  const LOGIN_COOKIE = req.cookies.LOGIN_COOKIE;
+  if (cookieId && LOGIN_COOKIE) {
+    const user = await UserService.findUserById(cookieId);
+    if (user?.isLogin) {
+      res.send('login');
+    }
+  } else {
+    res.send('not login');
+  }
+};
 
 export const registerHandler = async (
   req: Request,
@@ -36,7 +49,6 @@ export const registerHandler = async (
   try {
     const savedUser = await UserService.save({
       ...req.body,
-      jwtVersion: v4(),
       strategy: AuthenticationStrategy.default,
       requiredAuthAction: RequiredAuthAction.emailVerification,
     });
@@ -83,6 +95,7 @@ export const emailVerificationHandler = async (
           isVerified: true,
           requiredAuthAction: RequiredAuthAction.null,
           isActive: true,
+          jwtVersion: v4(),
         });
         return responseSuccess(res, HTTP_CODE.OK, msg.emailVerified(user.username));
       }
@@ -121,18 +134,12 @@ export const loginHandler = async (
     await UserService.findUserByIdAndUpdate(user.id, { isLogin: true });
     const accessToken = await JwtService.signAccessToken(user);
     const refreshToken = await JwtService.signRefreshToken(user);
-    // console.log('refresh token : ', refreshToken);
-
     if (accessToken && refreshToken) {
       const encryptedAccessToken = encrypt(accessToken);
       const encryptedRefreshToken = encrypt(refreshToken);
       // store refreshToken to redis
       await redis.set(`${user.id}_refToken`, encryptedRefreshToken);
-      const loginUserData: LoginResponse = {
-        email: user.email,
-        username: user.username,
-      };
-      return responseWithCookie(res, encryptedAccessToken, loginUserData);
+      return responseWithCookie(res, encryptedAccessToken, user);
     }
   } catch (err) {
     console.log(err);
@@ -147,17 +154,16 @@ export const logoutHandler = async (
 ): Promise<void> => {
   try {
     // verify the token first
-    const userId = req.userId;
-    console.log('userId : ', userId);
-
+    const userId = req.cookies.COOKIE_ID;
     if (userId) {
       // update user credential
-      await UserService.findUserByIdAndUpdate(userId, {
+      await UserService.findUserByIdAndUpdate(req.userId, {
         isLogin: false,
       });
       await redis.del(`${userId}_refToken`);
       // delete user's cookie
-      res.clearCookie('LOGIN_CREDENTIALS');
+      res.clearCookie(process.env.COOKIE_NAME);
+      res.clearCookie(process.env.COOKIE_ID);
       res.send('logout successfully');
     }
   } catch (error) {
@@ -172,8 +178,8 @@ export const refreshTokenHandler = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const userId = req.params.userId;
-    const encryptedRefreshToken = await redis.get(`${userId}_refToken`);
+    const cookieId = req.cookies.COOKIE_ID;
+    const encryptedRefreshToken = await redis.get(`${cookieId}_refToken`);
     const bearerRefreshToken = decrypt(encryptedRefreshToken ?? '');
     const token = bearerRefreshToken.split(' ')[1];
     const payload = await JwtService.verifyRefreshToken(token);
@@ -188,7 +194,7 @@ export const refreshTokenHandler = async (
       if (newAccessToken && newRefreshToken) {
         const newEncryptedAccessToken = encrypt(newAccessToken);
         const newEncryptedRefreshToken = encrypt(newRefreshToken);
-        await redis.set(`${user.id}_refToken`, newEncryptedRefreshToken);
+        await redis.set(`${cookieId}_refToken`, newEncryptedRefreshToken);
         return responseWithCookieOnly(res, newEncryptedAccessToken);
       }
     }

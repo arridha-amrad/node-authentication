@@ -1,7 +1,7 @@
 import { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { FieldsError, IValidatorResult } from "../validators/AuthValidator";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "../redux/Store";
 
 const UseFormAuth = <T>(
   callback: (state: T) => void,
