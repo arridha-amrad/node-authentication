@@ -1,12 +1,13 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Redirect, RouteComponentProps } from "react-router-dom";
+import * as messageActions from "../redux/reduxReducers/MessageReducer";
 
 interface ChildComponentProps extends RouteComponentProps<any> {}
 
 const EmailConfirmation: React.FC<ChildComponentProps> = ({ match }) => {
-  const [confirm, setConfirm] = useState(false);
-  const [message, setMessage] = useState<string | undefined>(undefined);
+  const dispatch = useDispatch();
 
   const link = match.params.link;
 
@@ -19,26 +20,17 @@ const EmailConfirmation: React.FC<ChildComponentProps> = ({ match }) => {
   useEffect(() => {
     confirmAPI()
       .then((res) => {
-        console.log("res", res.data);
-        setMessage(res.data.data);
-        setConfirm(true);
+        dispatch(messageActions.setMessage(res.data.data, "success"));
       })
       .catch((err) => {
-        setMessage(err.response.data.message);
-        console.log("verification error", err.response.data.message);
+        dispatch(
+          messageActions.setMessage(err.response.data.message, "danger")
+        );
       });
     // eslint-disable-next-line
   }, []);
 
-  return (
-    <div>
-      {confirm ? (
-        <Redirect to={{ pathname: "/login", state: message }} />
-      ) : (
-        message
-      )}
-    </div>
-  );
+  return <Redirect to={{ pathname: "/login" }} />;
 };
 
 export default EmailConfirmation;

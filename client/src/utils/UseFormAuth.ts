@@ -11,21 +11,22 @@ const UseFormAuth = <T>(
   const [states, setState] = useState<T>(initialState);
   const [errors, setErrors] = useState<FieldsError<T> | null>();
   const dispatch = useDispatch();
-  const { loadingAuth, status } = useSelector((state: RootState) => state.auth);
+  const { loadingAuth, requestStatus } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   useEffect(() => {
-    if (status) {
+    if (requestStatus) {
       setState(initialState);
     } else {
       setState({ ...states });
     }
     // eslint-disable-next-line
-  }, [status]);
+  }, [requestStatus]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { valid, errors: validatorErrors } = validator(states);
-    console.log("valid", valid);
 
     if (!valid) {
       setErrors({

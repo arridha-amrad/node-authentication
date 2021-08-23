@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import MyTextField from "../components/Form/MyTextField";
 import { Button } from "../elements/button.element";
@@ -8,12 +8,7 @@ import { RegisterValidator } from "../validators/AuthValidator";
 import SocialLoginButton from "../components/Button/socialLoginBtn";
 import { VSpacer } from "../elements/spacer.element";
 import { register } from "../redux/reduxActions/AuthActions";
-import store from "../redux/Store";
 import FormWrapper from "../components/Form/FormWrapper";
-import {
-  CLEAR_AUTH_ERRORS,
-  CLEAR_AUTH_MESSAGE,
-} from "../redux/reduxTypes/AuthTypes";
 import { RegisterData } from "../dto/AuthDTO";
 
 interface RegisterProps {}
@@ -33,11 +28,6 @@ const Register: React.FC<RegisterProps> = () => {
     );
 
   const { username, email, password, confirmPassword } = states;
-
-  useEffect(() => {
-    store.dispatch({ type: CLEAR_AUTH_ERRORS });
-    store.dispatch({ type: CLEAR_AUTH_MESSAGE });
-  }, []);
 
   return (
     <FormWrapper>
