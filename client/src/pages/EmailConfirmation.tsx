@@ -1,24 +1,31 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Redirect, RouteComponentProps } from "react-router-dom";
-import axiosInstance from "../utils/axiosInterceptors";
 
 interface ChildComponentProps extends RouteComponentProps<any> {}
 
 const EmailConfirmation: React.FC<ChildComponentProps> = ({ match }) => {
   const [confirm, setConfirm] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string | undefined>(undefined);
+
+  const link = match.params.link;
+
+  const confirmAPI = async () => {
+    return await axios.put(
+      `${process.env.REACT_APP_SERVER_URL}/auth/verify-email/${link}`
+    );
+  };
 
   useEffect(() => {
-    const link = match.params.link;
-    axiosInstance
-      .put(`/auth/verify-email/${link}`)
+    confirmAPI()
       .then((res) => {
-        console.log(res.data);
+        console.log("res", res.data);
         setMessage(res.data.data);
         setConfirm(true);
       })
       .catch((err) => {
-        console.log(err.response);
+        setMessage(err.response.data.message);
+        console.log("verification error", err.response.data.message);
       });
     // eslint-disable-next-line
   }, []);
@@ -28,7 +35,7 @@ const EmailConfirmation: React.FC<ChildComponentProps> = ({ match }) => {
       {confirm ? (
         <Redirect to={{ pathname: "/login", state: message }} />
       ) : (
-        "Invalid link"
+        message
       )}
     </div>
   );

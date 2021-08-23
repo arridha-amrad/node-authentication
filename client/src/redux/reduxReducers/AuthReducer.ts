@@ -26,7 +26,7 @@ const AuthReducer = (
         ...state,
         loadingAuth: false,
       };
-    case "SET_USER_SUCCESS":
+    case "SET_AUTHENTICATED":
       return {
         ...state,
         isAuthenticated: true,

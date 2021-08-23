@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Loaders from "./components/loaders/loaders";
 import { GlobalStyles } from "./components/styled.globals";
@@ -10,39 +10,45 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ResetPassword from "./pages/ResetPassword";
 import Test from "./pages/Test";
-import { RootState } from "./redux/Store";
 import SecureRoute from "./utils/SecureRoute";
-import axiosInstance from "./utils/axiosInterceptors";
+import { useState } from "react";
+import axiosInstance from "./utils/AxiosInterceptors";
 
 const App = () => {
-  const { loadingAuth } = useSelector((state: RootState) => state.auth);
+  const [loading, setLoading] = useState(false);
+
+  console.log(process.cwd());
 
   const dispatch = useDispatch();
 
+  const refreshTokenHandler = async () => {
+    return axiosInstance.get(
+      `${process.env.REACT_APP_SERVER_URL}/auth/refresh-token`
+    );
+  };
+
   useEffect(() => {
-    dispatch({ type: "LOADING_AUTH" });
-    axiosInstance
-      .get("/auth/isAuthenticated")
-      .then((res) => {
-        if (res.data === "login") {
+    if (localStorage.getItem("data") === "login") {
+      setLoading(true);
+      dispatch({ type: "LOADING_AUTH" });
+      refreshTokenHandler()
+        .then(() => {
+          console.log("refresh token success");
           dispatch({
-            type: "SET_USER_SUCCESS",
+            type: "SET_AUTHENTICATED",
           });
-        } else {
+        })
+        .finally(() => {
+          setLoading(false);
           dispatch({
-            type: "SET_UNAUTHENTICATED",
+            type: "STOP_LOADING_AUTH",
           });
-        }
-      })
-      .finally(() => {
-        dispatch({
-          type: "STOP_LOADING_AUTH",
         });
-      });
+    }
     // eslint-disable-next-line
   }, []);
 
-  if (loadingAuth) {
+  if (loading) {
     return <Loaders />;
   }
   return (

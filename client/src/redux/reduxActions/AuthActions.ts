@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import { setAccessToken } from "../../setAccessToken";
 import { AuthActionsType } from "../reduxTypes/AuthTypes";
-import axiosInstance from "../../utils/axiosInterceptors";
+import axiosInstance from "../../utils/AxiosInterceptors";
 import { meQuery } from "./UserActions";
 import {
   ForgotPasswordData,
@@ -39,6 +39,7 @@ export const logout = () => async (dispatch: Dispatch<AuthActionsType>) => {
   dispatch({ type: "LOADING_AUTH" });
   try {
     await axiosInstance.post("/auth/logout");
+    localStorage.removeItem("data");
     dispatch({ type: "LOGOUT" });
     window.location.href = "/login";
   } catch (err) {
@@ -50,13 +51,11 @@ export const login =
   (loginData: LoginData) => async (dispatch: Dispatch<AuthActionsType>) => {
     requiredDispatch(dispatch);
     try {
-      console.log("login data : ", loginData);
-      // const res = await fetch(url, options as any)
-      const res = await axiosInstance.post("/auth/login", loginData);
-      console.log("login result", res);
+      await axiosInstance.post("/auth/login", loginData);
       dispatch({
         type: "LOGIN_SUCCESS",
       });
+      localStorage.setItem("data", "login");
     } catch (err) {
       console.log("login error", err.response.data.message);
       dispatch({

@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const baseURL = "http://localhost:5000/api/";
+const baseURL = process.env.REACT_APP_SERVER_URL;
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
   async (error: any) => {
     if (error.response.data.message === "jwt expired") {
       return axiosInstance
-        .get("http://localhost:5000/api/auth/refresh-token")
+        .get(`${baseURL}/auth/refresh-token`)
         .then(() => {
           return axios(error.config);
         })

@@ -37,4 +37,5 @@ export type AuthActionsType =
   | { type: typeof SET_USER_SUCCESS; payload: SetUserData }
   | { type: typeof SET_USER_FAILED }
   | { type: typeof SET_UNAUTHENTICATED }
+  | { type: typeof SET_AUTHENTICATED }
   | { type: typeof RESET_REQUEST_STATUS };
