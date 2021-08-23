@@ -17,8 +17,6 @@ import axiosInstance from "./utils/AxiosInterceptors";
 const App = () => {
   const [loading, setLoading] = useState(false);
 
-  console.log(process.cwd());
-
   const dispatch = useDispatch();
 
   const refreshTokenHandler = async () => {
