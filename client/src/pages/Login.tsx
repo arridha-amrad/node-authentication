@@ -7,10 +7,10 @@ import UseFormAuth from "../utils/UseFormAuth";
 import { LoginValidator } from "../validators/AuthValidator";
 // import SocialLoginButton from "../components/Button/socialLoginBtn";
 import { VSpacer } from "../elements/spacer.element";
-import { ILoginState } from "../interfaces/auth.state.interfaces";
 import { login } from "../redux/reduxActions/AuthActions";
 import FormWrapper from "../components/Form/FormWrapper";
 import { FormLink } from "../elements/form.element";
+import { LoginData } from "../dto/AuthDTO";
 
 interface ChildComponentProps {}
 
@@ -18,7 +18,7 @@ const Login: React.FC<ChildComponentProps> = () => {
   document.title = "Login";
 
   const { states, handleSubmit, handleChange, errors, loadingAuth } =
-    UseFormAuth<ILoginState>(
+    UseFormAuth<LoginData>(
       login,
       {
         identity: "",
