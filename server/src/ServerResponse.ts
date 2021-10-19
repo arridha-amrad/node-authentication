@@ -48,9 +48,7 @@ export const responseWithCookieOnly = (res: Response, encryptedAccessToken: stri
 // };
 
 export const responseSuccess = <T>(res: Response, status: HTTP_CODE, data: T): void => {
-  res.status(status).json({
-    data,
-  });
+  res.status(status).send(data);
 };
 
 // export const serverError = (res: Response): void => {

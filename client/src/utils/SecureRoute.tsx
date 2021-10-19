@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
-import { FC } from "react";
 
 interface IProps {
-  component?: React.FC;
+  component?: FC;
   exact?: boolean;
   path?: string;
 }
