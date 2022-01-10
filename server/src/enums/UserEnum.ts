@@ -1,5 +1,5 @@
 export enum RequiredAuthAction {
-   null = 'null',
+   none = 'none',
    emailVerification = 'emailVerification',
    resetPassword = 'resetPassword',
 }

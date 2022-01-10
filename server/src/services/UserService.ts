@@ -1,6 +1,4 @@
-import {
-   IUserModel,
-} from '../interfacesAndTypes/UserInterfaces';
+import { IUserModel } from '../interfacesAndTypes/UserInterfaces';
 import UserModel from '../models/UserModel';
 
 export const save = async (user: IUserModel): Promise<IUserModel> => {
