@@ -18,20 +18,15 @@ import { HTTP_CODE } from '../enums/HTTP_CODE';
 import * as Validator from '../validators/AuthValidator';
 // import { OAuth2Client, TokenPayload } from 'google-auth-library';
 // import { IUser } from '../model/user/IUser';
-import * as UserService from '../services/UserService';
 import { BadRequestException } from '../exceptions/BadRequestException';
 import Exception from '../exceptions/Exception';
 import ServerErrorException from '../exceptions/ServerErrorException';
-
 import * as redis from '../database/redisClient';
-
 import { decrypt, encrypt } from '../utils/Encrypt';
 import { LoginRequest, RegisterRequest } from '../dto/AuthData';
 import UserModel from '../models/UserModel';
 import { customAlphabet } from 'nanoid/async';
 import VerificationCodeModel from '../models/VerificationCodeModel';
-import { IUserModel } from 'src/interfacesAndTypes/UserInterfaces';
-import { userInfo } from 'os';
 
 export const checkIsAuthenticated = async (
    req: Request,
@@ -40,7 +35,7 @@ export const checkIsAuthenticated = async (
    const cookieId = req.cookies.COOKIE_ID;
    const LOGIN_COOKIE = req.cookies.LOGIN_COOKIE;
    if (cookieId && LOGIN_COOKIE) {
-      const user = await UserService.findUserById(cookieId);
+      const user = await UserModel.findById(cookieId);
       if (user) {
          res.send('login');
       }
@@ -249,7 +244,7 @@ export const refreshTokenHandler = async (
       const bearerRefreshToken = decrypt(encryptedRefreshToken ?? '');
       const token = bearerRefreshToken.split(' ')[1];
       const payload = await JwtService.verifyRefreshToken(token);
-      const user = await UserService.findUserById(payload?.userId ?? '');
+      const user = await UserModel.findById(payload?.userId);
       if (user) {
          if (user.jwtVersion !== payload?.jwtVersion ?? '') {
             return next(
@@ -286,31 +281,23 @@ export const forgotPasswordHandler = async (
       return next(new BadRequestException(errors));
    }
    try {
-      const user = await UserService.findUserByUsernameOrEmail(email);
+      const user = await UserModel.findOne({ email });
       if (!user) {
          return next(new Exception(HTTP_CODE.NOT_FOUND, msg.userNotFound));
       }
       if (!user.isVerified) {
          return next(new Exception(HTTP_CODE.FORBIDDEN, msg.emailNotVerified));
       }
-      // update user credentials
-      const updated = await UserService.findUserByIdAndUpdate(user.id, {
-         requiredAuthAction: RequiredAuthAction.resetPassword,
-      });
-      if (updated) {
-         const token = await JwtService.createEmailLinkToken(email);
-         if (token) {
-            const encryptedToken = encrypt(token).replaceAll('/', '_');
-            await sendEmail(
-               email,
-               resetPasswordRequest(user.username, encryptedToken),
-            );
-            return responseSuccess(
-               res,
-               HTTP_CODE.OK,
-               msg.forgotPassword(email),
-            );
-         }
+      user.requiredAuthAction = RequiredAuthAction.resetPassword;
+      await user.save();
+      const token = await JwtService.createEmailLinkToken(email);
+      if (token) {
+         const encryptedToken = encrypt(token).replaceAll('/', '_');
+         await sendEmail(
+            email,
+            resetPasswordRequest(user.username, encryptedToken),
+         );
+         return responseSuccess(res, HTTP_CODE.OK, msg.forgotPassword(email));
       }
    } catch (err) {
       console.log('forgotPassword : ', err);
@@ -332,7 +319,7 @@ export const resetPasswordHandler = async (
    try {
       const token = decrypt(encryptedLinkToken.replaceAll('_', '/'));
       const payload = await JwtService.verifyTokenLink(token);
-      const user = await UserService.findUserByUsernameOrEmail(payload.email);
+      const user = await UserModel.findOne({ email: payload.email });
       if (user) {
          if (user.requiredAuthAction !== RequiredAuthAction.resetPassword) {
             return next(
@@ -340,7 +327,7 @@ export const resetPasswordHandler = async (
             );
          }
          // update user's jwtVersion, password, requiredAuthAction
-         await UserService.findUserByIdAndUpdate(user.id, {
+         await UserModel.findByIdAndUpdate(user.id, {
             jwtVersion: v4(),
             requiredAuthAction: RequiredAuthAction.none,
             password: await argon2.hash(password),

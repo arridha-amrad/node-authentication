@@ -2,11 +2,11 @@ import { IMailContent } from '../interfacesAndTypes/MailInterfaces';
 
 export const emailConfirmation = (
    username: string,
-   link: string,
+   code: string,
 ): IMailContent => ({
    subject: `${process.env.APP_NAME} - Email confirmation`,
-   text: `Please use the following link to confirm your email address: ${process.env.CLIENT_ORIGIN}/confirm/${link}`,
-   html: `<p>Hello ${username}</p><p>Please use the following link to confirm your email:</p> <p>${process.env.CLIENT_ORIGIN}/confirm/${link}</p> <p>If you didn’t ask to confirm your email, you can ignore this email.
+   text: `Please use this code to confirm your email`,
+   html: `<p>Hello ${username}</p><p>Verification Code: ${code}</p> <p>If you didn’t ask to confirm your email, you can ignore this email.
         </p> <p>Thanks</p>`,
 });
 
