@@ -1,11 +1,17 @@
-import { IUserModel } from '../interfacesAndTypes/UserInterfaces';
+import { IUserModel } from '../interfacesAndTypes/IUserModel';
 
 export type LoginRequest = Pick<IUserModel, 'password'> & {
-  identity: string;
+   identity: string;
 };
 
-export type RegisterRequest = Pick<IUserModel, 'username' | 'email' | 'password'>;
+export type RegisterRequest = Pick<
+   IUserModel,
+   'username' | 'email' | 'password'
+>;
 
 export type LoginResponse = Pick<IUserModel, 'email' | 'username' | 'id'>;
 
-export type FetchedUserResponse = Pick<IUserModel, 'username' | 'email' | 'createdAt' | 'isLogin'>;
+export type FetchedUserResponse = Pick<
+   IUserModel,
+   'username' | 'email' | 'createdAt'
+>;

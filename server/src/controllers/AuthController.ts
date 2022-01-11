@@ -16,8 +16,6 @@ import {
 } from '../ServerResponse';
 import { HTTP_CODE } from '../enums/HTTP_CODE';
 import * as Validator from '../validators/AuthValidator';
-// import { OAuth2Client, TokenPayload } from 'google-auth-library';
-// import { IUser } from '../model/user/IUser';
 import * as UserService from '../services/UserService';
 import { BadRequestException } from '../exceptions/BadRequestException';
 import Exception from '../exceptions/Exception';
@@ -27,11 +25,9 @@ import * as redis from '../database/redisClient';
 
 import { decrypt, encrypt } from '../utils/Encrypt';
 import { LoginRequest, RegisterRequest } from '../dto/AuthData';
-import UserModel from '../models/UserModel';
 import { customAlphabet } from 'nanoid/async';
 import VerificationCodeModel from '../models/VerificationCodeModel';
-import { IUserModel } from 'src/interfacesAndTypes/UserInterfaces';
-import { userInfo } from 'os';
+import UserModel from '../models/UserModel';
 
 export const checkIsAuthenticated = async (
    req: Request,
@@ -48,6 +44,7 @@ export const checkIsAuthenticated = async (
       res.send('not login');
    }
 };
+
 
 export const registerHandler = async (
    req: Request,
@@ -92,7 +89,7 @@ export const registerHandler = async (
          })
          .json({ message: msg.registerSuccess(email) });
       return;
-   } catch (err: any) {
+   } catch (err) {
       console.error(err);
       if (err.keyPattern.username === 1) {
          return next(

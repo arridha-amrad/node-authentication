@@ -8,7 +8,7 @@ import {
 import { HTTP_CODE } from '../enums/HTTP_CODE';
 import Exception from '../exceptions/Exception';
 import * as fs from 'fs';
-import { IUserModel } from '../interfacesAndTypes/UserInterfaces';
+import { IUserModel } from '../interfacesAndTypes/IUserModel';
 import { decrypt } from '../utils/Encrypt';
 
 const publicKey = fs.readFileSync('keys/public.pem', 'utf-8');
