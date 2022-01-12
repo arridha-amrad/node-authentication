@@ -3,6 +3,9 @@ import { IUserModel } from '../interfacesAndTypes/IUserModel';
 
 const UserSchema = new mongoose.Schema(
    {
+      fullName: {
+         type: String,
+      },
       username: {
          type: String,
          required: true,
@@ -12,6 +15,10 @@ const UserSchema = new mongoose.Schema(
          type: String,
          required: true,
          unique: true,
+      },
+      avatarURL: {
+         type: String,
+         default: "https://iupac.org/wp-content/uploads/2018/05/default-avatar.png"
       },
       role: {
          type: String,
