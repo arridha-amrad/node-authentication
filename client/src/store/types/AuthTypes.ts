@@ -16,16 +16,16 @@ export const UPLOAD_AVATAR = "UPLOAD_AVATAR";
 export const UNSET_BLOCKED = "UNSET_BLOCKED";
 
 export type AuthActionsType =
-   | { type: typeof UNSET_BLOCKED }
-   | { type: typeof UPLOAD_AVATAR; payload: string }
-   | { type: typeof AUTHENTICATED_USER_DATA; payload: AuthenticatedUserData }
-   | { type: typeof REDIRECT_TO_LOGIN }
-   | { type: typeof AUTH_SUCCESS }
-   | { type: typeof AUTH_ERROR }
-   | { type: typeof LOGIN_SUCCESS }
-   | { type: typeof LOADING_AUTH }
-   | { type: typeof STOP_LOADING_AUTH }
-   | { type: typeof LOGOUT }
-   | { type: typeof SET_UNAUTHENTICATED }
-   | { type: typeof SET_AUTHENTICATED }
-   | { type: typeof RESET_REQUEST_STATUS };
+  | { type: typeof UNSET_BLOCKED }
+  | { type: typeof UPLOAD_AVATAR; payload: string }
+  | { type: typeof AUTHENTICATED_USER_DATA; payload: AuthenticatedUserData }
+  | { type: typeof REDIRECT_TO_LOGIN }
+  | { type: typeof AUTH_SUCCESS }
+  | { type: typeof AUTH_ERROR }
+  | { type: typeof LOGIN_SUCCESS }
+  | { type: typeof LOADING_AUTH }
+  | { type: typeof STOP_LOADING_AUTH }
+  | { type: typeof LOGOUT }
+  | { type: typeof SET_UNAUTHENTICATED }
+  | { type: typeof SET_AUTHENTICATED }
+  | { type: typeof RESET_REQUEST_STATUS };
