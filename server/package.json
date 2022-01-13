@@ -22,6 +22,7 @@
    "license": "ISC",
    "dependencies": {
       "argon2": "0.28.3",
+      "axios": "^0.24.0",
       "cookie-parser": "1.4.6",
       "cors": "2.8.5",
       "dotenv": "10.0.0",

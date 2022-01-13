@@ -18,7 +18,8 @@ const UserSchema = new mongoose.Schema(
       },
       avatarURL: {
          type: String,
-         default: "https://iupac.org/wp-content/uploads/2018/05/default-avatar.png"
+         default:
+            'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png',
       },
       role: {
          type: String,
@@ -28,7 +29,6 @@ const UserSchema = new mongoose.Schema(
       },
       password: {
          type: String,
-         required: true,
       },
       strategy: {
          type: String,

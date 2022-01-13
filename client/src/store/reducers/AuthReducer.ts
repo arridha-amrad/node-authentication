@@ -9,13 +9,13 @@ export interface AuthenticatedUserData {
 }
 
 export interface AuthState {
-  loadingAuth: boolean;
+  isLoadingAuth: boolean;
   isAuthenticated: boolean;
   authenticatedUser: AuthenticatedUserData | null;
 }
 
 const initialState: AuthState = {
-  loadingAuth: false,
+  isLoadingAuth: false,
   isAuthenticated: false,
   authenticatedUser: null,
 };
@@ -25,10 +25,15 @@ export default function AuthReducer(
   action: AuthActionsType
 ): AuthState {
   switch (action.type) {
+    case "STOP_LOADING_AUTH":
+      return {
+        ...state,
+        isLoadingAuth: false,
+      };
     case "LOADING_AUTH":
       return {
         ...state,
-        loadingAuth: true,
+        isLoadingAuth: true,
       };
     case "SET_AUTHENTICATED":
       return {
@@ -45,6 +50,7 @@ export default function AuthReducer(
         ...state,
         authenticatedUser: action.payload,
       };
+    case "RESET_AUTH_USER":
     default:
       return state;
   }

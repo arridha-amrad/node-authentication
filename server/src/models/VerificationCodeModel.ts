@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { IUserModel } from 'src/interfacesAndTypes/IUserModel';
+import { IUserModel } from '../interfacesAndTypes/IUserModel';
 
 interface IVerificationCodeModel {
    code: string;

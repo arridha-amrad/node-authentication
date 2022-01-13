@@ -14,10 +14,12 @@ export const AUTHENTICATED_USER_DATA = "AUTHENTICATED_USER_DATA";
 export const UPDATE_USER_DATA = "UPDATE_USER_DATA";
 export const UPLOAD_AVATAR = "UPLOAD_AVATAR";
 export const UNSET_BLOCKED = "UNSET_BLOCKED";
+export const RESET_AUTH_USER = "RESET_AUTH_USER";
 
 export type AuthActionsType =
   | { type: typeof UNSET_BLOCKED }
   | { type: typeof UPLOAD_AVATAR; payload: string }
+  | { type: typeof RESET_AUTH_USER }
   | { type: typeof AUTHENTICATED_USER_DATA; payload: AuthenticatedUserData }
   | { type: typeof REDIRECT_TO_LOGIN }
   | { type: typeof AUTH_SUCCESS }

@@ -16,12 +16,6 @@ import {
 } from '../ServerResponse';
 import { HTTP_CODE } from '../enums/HTTP_CODE';
 import * as Validator from '../validators/AuthValidator';
-<<<<<<< HEAD
-import * as UserService from '../services/UserService';
-=======
-// import { OAuth2Client, TokenPayload } from 'google-auth-library';
-// import { IUser } from '../model/user/IUser';
->>>>>>> refs/remotes/origin/master
 import { BadRequestException } from '../exceptions/BadRequestException';
 import Exception from '../exceptions/Exception';
 import ServerErrorException from '../exceptions/ServerErrorException';
@@ -30,10 +24,7 @@ import { decrypt, encrypt } from '../utils/Encrypt';
 import { LoginRequest, RegisterRequest } from '../dto/AuthData';
 import { customAlphabet } from 'nanoid/async';
 import VerificationCodeModel from '../models/VerificationCodeModel';
-<<<<<<< HEAD
 import UserModel from '../models/UserModel';
-=======
->>>>>>> refs/remotes/origin/master
 
 export const checkIsAuthenticated = async (
    req: Request,
@@ -50,7 +41,6 @@ export const checkIsAuthenticated = async (
       res.send('not login');
    }
 };
-
 
 export const registerHandler = async (
    req: Request,
@@ -131,7 +121,6 @@ export const emailVerificationHandler = async (
       const code = await VerificationCodeModel.findOne({
          owner: userId,
       }).populate('owner', '-password');
-
       if (
          userId &&
          code &&
