@@ -1,10 +1,9 @@
 import { Box, Spinner } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Home, Login, Register } from "./pages";
-import { RootState } from "./store";
 import {
   AUTHENTICATED_USER_DATA,
   LOADING_AUTH,
@@ -17,8 +16,6 @@ const App = () => {
   const [isMounted, setIsMounted] = useState(true);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const { isLoadingAuth, isAuthenticated } = useSelector((state: RootState) => state.auth)
-  const navigate = useNavigate()
   const fetchUser = async () => {
     try {
       setIsLoading(true)
