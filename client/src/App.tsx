@@ -1,10 +1,15 @@
+import { Box, Spinner } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Home, Login, Register } from "./pages";
+import { RootState } from "./store";
 import {
   AUTHENTICATED_USER_DATA,
+  LOADING_AUTH,
   SET_AUTHENTICATED,
+  STOP_LOADING_AUTH,
 } from "./store/types/AuthTypes";
 import axiosInstance from "./utils/AxiosInterceptor";
 
@@ -12,9 +17,12 @@ const App = () => {
   const [isMounted, setIsMounted] = useState(true);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const { isLoadingAuth, isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const navigate = useNavigate()
   const fetchUser = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
+      dispatch({ type: LOADING_AUTH })
       await axiosInstance.get("/api/auth/refresh-token");
       const { data } = await axiosInstance.get("/api/user/me");
       if (isMounted) {
@@ -29,7 +37,10 @@ const App = () => {
     } catch (err) {
       console.log(err);
     } finally {
-      setIsLoading(false);
+      dispatch({ type: STOP_LOADING_AUTH })
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000)
     }
   };
   useEffect(() => {
@@ -39,9 +50,18 @@ const App = () => {
     };
     // eslint-disable-next-line
   }, []);
+  if (isLoading) {
+    return (
+      <Box d="flex" alignItems="center" h="100vh" w="100%" bg="InfoBackground" justifyContent="center">
+        <Spinner size="xl" />
+      </Box>
+    )
+  }
   return (
     <Routes>
-      <Route path="/" element={<Home isLoading={isLoading} />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Home isLoading={isLoading} />} />
+      </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>

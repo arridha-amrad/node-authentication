@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertIcon,
+  Box,
   Button,
   Container,
   FormControl,
@@ -18,12 +19,13 @@ import {
   STOP_LOADING_AUTH,
 } from "../store/types/AuthTypes";
 import axiosInstance from "../utils/AxiosInterceptor";
+import getGoogleOauthURL from "../utils/GetGoogleOAuthURL";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
-  const { isLoadingAuth } = useSelector((state: RootState) => state.auth);
+  const { isLoadingAuth, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [state, setState] = useState({
     identity: "",
     password: "",
@@ -52,13 +54,24 @@ const Login = () => {
       dispatch({ type: STOP_LOADING_AUTH });
     }
   };
+
   useEffect(() => {
+    if (!isLoadingAuth && isAuthenticated) {
+      navigate("/")
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const myParam = urlParams.get("e");
     if (myParam) {
       setMessage(myParam);
     }
   }, []);
+
+  const openGoogleOauth = () => {
+    window.open(getGoogleOauthURL(), "_blank");
+  };
+  const openFacebookOauth = () => {
+    window.open("http://localhost:5000/api/facebook/login", "_blank")
+  }
   return (
     <Container>
       {!!message && (
@@ -91,6 +104,10 @@ const Login = () => {
       <Button mt="10" w="100%" onClick={handleLogin} color="blue">
         {isLoadingAuth ? "Loading..." : "Login"}
       </Button>
+      <Box mt="5">
+        <Button w="100%" mt="2" colorScheme="orange" onClick={openGoogleOauth}>Login with Google</Button>
+        <Button w="100%" mt="2" colorScheme="facebook" onClick={openFacebookOauth}>Login with Facebook</Button>
+      </Box>
     </Container>
   );
 };
