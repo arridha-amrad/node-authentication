@@ -87,51 +87,43 @@ export const googleOauthHandler = async (req: Request, res: Response) => {
     const { access_token, id_token } = await getGoogleOAuthTokens({ code });
     // get user with tokens
     const googleUser = await getGoogleUser(id_token, access_token);
-    console.log('google user : ', googleUser);
     // upsert the user
     if (!googleUser.verified_email) {
       res.status(403).json({ message: 'Google account is not verified' });
     }
     const user = await UserModel.findOne({
       email: googleUser.email,
-      strategy: 'default',
     });
-    if (user) {
+
+    if (user && user.strategy !== "google") {
       return res.redirect(
         `${process.env.CLIENT_ORIGIN}/login?e=` +
-          encodeURIComponent(
-            'Another user has been registered with this email',
-          ),
+        encodeURIComponent(
+          'Another user has been registered with this email',
+        ),
       );
     }
+
     const { email, family_name, given_name, name, picture } = googleUser;
-    const userWithGoogle = await UserModel.findOne({
-      email: googleUser.email,
-      strategy: 'google',
-    });
     let myUser;
-    if (!userWithGoogle) {
+    if (!user) {
       const composedUser = new UserModel({
         avatarURL: picture,
         email,
         fullName: `${given_name} ${family_name}`,
-        username: name,
+        username: name.split(" ").join(""),
         isActive: true,
         isVerified: true,
-        role: 'user',
         jwtVersion: v4(),
         strategy: 'google',
       });
-      const newUser = await composedUser.save();
-      myUser = newUser;
+      myUser = await composedUser.save();
     } else {
-      myUser = userWithGoogle;
+      myUser = user;
     }
     // create accessToken and refreshToken
     const accessToken = await signAccessToken(myUser);
     const refresh_token = await signRefreshToken(myUser);
-    console.log({ accessToken, refresh_token });
-
     const encryptedAccessToken = encrypt(accessToken!);
     const encryptedRefreshToken = encrypt(refresh_token!);
     await set(`${myUser.id}_refToken`, encryptedRefreshToken);

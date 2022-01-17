@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "../store";
-import { Text } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import { FC } from "react";
 import Logout from "../components/Logout";
 import getGoogleOauthURL from "../utils/GetGoogleOAuthURL";
@@ -16,6 +16,9 @@ const Home: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   const openGoogleOauth = () => {
     window.open(getGoogleOauthURL(), "_blank");
   };
+  const openFacebookOauth = () => {
+    window.open("http://localhost:5000/api/facebook/login", "_blank")
+  }
   return (
     <div>
       {!isLoadingAuth && authenticatedUser ? (
@@ -28,7 +31,8 @@ const Home: FC<{ isLoading: boolean }> = ({ isLoading }) => {
         <>
           <Link to="/register">Register</Link>
           <Link to="/login">Login</Link>
-          <div onClick={openGoogleOauth}>Login with Google</div>
+          <Button colorScheme="orange" onClick={openGoogleOauth}>Login with Google</Button>
+          <Button onClick={openFacebookOauth}>Login with Facebook</Button>
         </>
       )}
     </div>

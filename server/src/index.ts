@@ -16,7 +16,11 @@ import AuthRoutes from './routes/AuthRoutes';
 import UserRoutes from './routes/UserRoutes';
 import { errorMiddleware } from './middleware/ErrorMiddleware';
 import { connect } from './database/mongoDBInitializer';
-import { googleOauthHandler } from './controllers/OAuthGoogle';
+import FacebookPassportRoute from "./routes/FacebookPassportRoute"
+import GoogleOauthRoute from "./routes/GoogleOauthRoute"
+import passport from 'passport';
+
+import "./utils/Passport"
 
 console.clear();
 console.log(configEnv.dbURI);
@@ -28,6 +32,7 @@ export const runServer = (): Application => {
    const app: Express = express();
    app.use(cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }));
    app.use([
+      passport.initialize(),
       cookieParser(process.env.CLIENT_ORIGIN),
       express.json(),
       express.urlencoded({ extended: false }),
@@ -35,7 +40,8 @@ export const runServer = (): Application => {
    ``;
    app.use('/api/auth', AuthRoutes);
    app.use('/api/user', UserRoutes);
-   app.get('/api/oauth/google', googleOauthHandler);
+   app.use("/api/facebook", FacebookPassportRoute)
+   app.use('/api/google', GoogleOauthRoute)
    app.use(
       // eslint-disable-next-line
       (err: ExceptionType, req: Request, res: Response, _: NextFunction) => {
